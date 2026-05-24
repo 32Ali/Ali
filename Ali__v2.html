@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ali Alsuhaibani — CRM Pro</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --b:#3b82f6;--b2:#2563eb;--pu:#8b5cf6;--cy:#06b6d4;
+  --gr:#10b981;--am:#f59e0b;--rd:#ef4444;--pk:#ec4899;
+  --r:13px;--rs:9px;--rx:6px;
+  --fAr:'Cairo',sans-serif;
+  --fEn:'Inter',sans-serif;
+  --f:'Cairo',sans-serif;
+}
+body.lang-en{--f:'Inter',sans-serif}
+.dk{
+  --bg:#06101f;--bg2:#0a1628;--bg3:#0f1d35;--bg4:#162540;
+  --cd:#0d1929;--cd2:#131f34;--cd3:#192840;
+  --bo:rgba(255,255,255,.07);--bo2:rgba(255,255,255,.14);
+  --tx:#edf4ff;--t2:#7a95bb;--t3:#3d5070;
+  --sh:0 8px 40px rgba(0,0,0,.7);--sh2:0 2px 12px rgba(0,0,0,.4);
+  --sb:#060e1b;--sbo:rgba(255,255,255,.05);
+}
+.lt{
+  --bg:#eef2ff;--bg2:#e4eaff;--bg3:#d9e2ff;--bg4:#c9d5f5;
+  --cd:#fff;--cd2:#f7f9ff;--cd3:#edf1ff;
+  --bo:rgba(0,0,0,.07);--bo2:rgba(0,0,0,.14);
+  --tx:#0f1729;--t2:#445577;--t3:#8899bb;
+  --sh:0 4px 24px rgba(0,0,0,.09);--sh2:0 2px 8px rgba(0,0,0,.05);
+  --sb:#f0f4ff;--sbo:rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--f);font-size:14px;overflow:hidden}
+body{background:var(--bg);color:var(--tx);transition:background .3s,color .3s}
+body.lang-en{direction:ltr}
+body.lang-en .sb{border-left:none;border-right:1px solid var(--sbo)}
+body.lang-en .nv.on::after{right:auto;left:-6px}
+body.lang-en thead th{text-align:left}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+
+/* ─── LOGIN ─── */
+#LS{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+#LS::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.12),transparent 65%);top:-100px;right:-100px;pointer-events:none}
+#LS::after{content:'';position:absolute;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.09),transparent 65%);bottom:-80px;left:-80px;pointer-events:none}
+.lb{width:370px;background:var(--cd);border:1px solid var(--bo2);border-radius:20px;padding:32px 28px;box-shadow:var(--sh);position:relative;z-index:1;}
+.ll{text-align:center;margin-bottom:24px}
+.ll-ic{width:64px;height:64px;background:linear-gradient(135deg,var(--b),var(--pu));border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;box-shadow:0 8px 20px rgba(59,130,246,.35);margin-bottom:10px;letter-spacing:-1px;}
+.ll h1{font-size:17px;font-weight:800;margin-bottom:2px}
+.ll p{font-size:11.5px;color:var(--t2)}
+
+/* Lang Toggle on Login */
+.lang-row{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.langb{padding:5px 14px;border-radius:20px;border:1px solid var(--bo2);background:transparent;color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--f);transition:.2s}
+.langb.on{background:rgba(59,130,246,.14);border-color:rgba(59,130,246,.45);color:var(--b)}
+
+.rt{display:flex;gap:8px;margin-bottom:18px}
+.rtb{flex:1;padding:8px;border-radius:var(--rs);border:1px solid var(--bo2);background:transparent;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);transition:.2s;text-align:center;}
+.rtb.on{background:rgba(59,130,246,.14);border-color:rgba(59,130,246,.45);color:var(--b)}
+.pd{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.pdot{width:13px;height:13px;border-radius:50%;border:2px solid var(--bo2);background:transparent;transition:.2s;}
+.pdot.f{background:var(--b);border-color:var(--b);box-shadow:0 0 8px rgba(59,130,246,.5)}
+.pdot.e{background:var(--rd);border-color:var(--rd);animation:shk .3s}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.pb{height:54px;border-radius:var(--rs);border:1px solid var(--bo2);background:var(--cd2);font-size:21px;font-weight:700;color:var(--tx);cursor:pointer;font-family:var(--f);transition:.15s;user-select:none;}
+.pb:hover{background:var(--bg4);border-color:var(--b)}
+.pb:active{transform:scale(.95)}
+.pb.dl{font-size:15px;color:var(--t2)}
+.pz{grid-column:2}
+.lh{text-align:center;font-size:11px;color:var(--t3);margin-top:8px}
+
+/* ─── APP ─── */
+.app{display:flex;height:100vh;overflow:hidden}
+.sb{width:216px;min-width:216px;background:var(--sb);border-left:1px solid var(--sbo);display:flex;flex-direction:column;height:100vh;transition:width .26s,min-width .26s;z-index:50;flex-shrink:0;}
+.sb.mini{width:56px;min-width:56px}
+.sb.mini .nl,.sb.mini .ns,.sb.mini .nb{display:none}
+.sb.mini .nv{justify-content:center;padding:10px 0;margin:2px 6px}
+.sb.mini .lw{justify-content:center;padding:14px 8px}
+.sb.mini .lt2,.sb.mini .sc-info{display:none}
+.sb.mini .sfb{flex-direction:column;gap:4px}
+.sb.mini .ac2{justify-content:center;padding:8px}
+.lw{display:flex;align-items:center;gap:9px;padding:14px 12px;border-bottom:1px solid var(--sbo)}
+.lic{width:34px;height:34px;background:linear-gradient(135deg,var(--b),var(--pu));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(59,130,246,.3);}
+.lt2{min-width:0}
+.lt2 b{display:block;font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt2 span{display:block;font-size:10px;color:var(--t2);margin-top:1px}
+.nsc{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 0}
+.ns{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--t3);padding:10px 14px 4px;text-transform:uppercase}
+.nv{display:flex;align-items:center;gap:8px;padding:8px 11px;color:var(--t2);cursor:pointer;border-radius:var(--rs);margin:1px 6px;font-size:12.5px;transition:.18s;position:relative;}
+.nv:hover{background:var(--bg4);color:var(--tx)}
+.nv.on{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(139,92,246,.12));color:var(--b);font-weight:600}
+.nv.on::after{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:3px;height:55%;background:linear-gradient(to bottom,var(--b),var(--pu));border-radius:2px;}
+.ni{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nl{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb{background:var(--b);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;margin-right:auto}
+.sft{padding:9px;border-top:1px solid var(--sbo)}
+.sfb{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:7px}
+.scb{width:29px;height:29px;border-radius:var(--rx);border:1px solid var(--bo2);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t2);transition:.18s;}
+.scb:hover{border-color:var(--b);color:var(--b);background:rgba(59,130,246,.1)}
+.ac2{display:flex;align-items:center;gap:8px;padding:8px 9px;background:var(--bg4);border-radius:var(--rs);cursor:pointer;transition:.18s;overflow:hidden;}
+.ac2:hover{background:var(--cd3)}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--pu));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;border:2px solid rgba(255,255,255,.1);overflow:hidden;}
+.av img{width:100%;height:100%;object-fit:cover}
+.sc-info{min-width:0;flex:1}
+.sc-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-role{font-size:10px;color:var(--t2)}
+.mn{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.tb{height:52px;background:var(--cd);border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:9px;padding:0 14px;flex-shrink:0;z-index:40;}
+.tb-ti{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tb-sp{flex:1}
+
+/* ─── GLOBAL SEARCH ─── */
+.gsw{position:relative;flex:1;max-width:300px}
+.gsi{width:100%;height:33px;background:var(--bg3);border:1px solid var(--bo2);border-radius:20px;padding:0 14px 0 34px;color:var(--tx);font-family:var(--f);font-size:12.5px;outline:none;transition:.2s;}
+body.lang-en .gsi{padding:0 34px 0 14px}
+.gsi::placeholder{color:var(--t3)}
+.gsi:focus{border-color:var(--b);background:var(--cd);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.gs-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--t3);pointer-events:none}
+body.lang-en .gs-ico{left:auto;right:11px}
+.gsd{position:absolute;top:calc(100% + 5px);left:0;right:0;z-index:300;background:var(--cd);border:1px solid var(--bo2);border-radius:var(--r);box-shadow:var(--sh);display:none;overflow:hidden;max-height:320px;overflow-y:auto;}
+.gsd.op{display:block;animation:dIn .14s ease}
+@keyframes dIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.gsr{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--bo);transition:.15s;}
+.gsr:last-child{border-bottom:none}
+.gsr:hover,.gsr.hl{background:rgba(59,130,246,.1)}
+.gsr-ic{width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,.13);color:var(--b);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.gsr-m{flex:1;min-width:0}
+.gsr-n{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gsr-s{font-size:10px;color:var(--t3);margin-top:1px}
+.gsr-p{font-size:13px;font-weight:700;color:var(--b);white-space:nowrap}
+.tbb{width:31px;height:31px;border-radius:var(--rs);border:1px solid var(--bo);background:var(--cd2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2);transition:.18s;position:relative;flex-shrink:0;}
+.tbb:hover{border-color:var(--b);color:var(--b)}
+.tdot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--rd);border:1.5px solid var(--cd);}
+.tck{font-size:10.5px;color:var(--t3);line-height:1.3;text-align:center;white-space:nowrap}
+.ct{flex:1;overflow-y:auto;overflow-x:hidden}
+.pg{display:none;padding:16px;animation:fu .22s ease}
+.pg.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* ─── ENHANCED PRODUCT CARD ─── */
+.spcard{
+  display:none;
+  background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(139,92,246,.07));
+  border:1.5px solid rgba(59,130,246,.35);
+  border-radius:16px;padding:0;
+  margin-top:14px;position:relative;overflow:hidden;
+}
+.spcard.on{display:block;animation:cardIn .3s cubic-bezier(.34,1.4,.64,1)}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.spcard-inner{display:flex;align-items:stretch;gap:0}
+.spc-left{
+  padding:20px 22px;flex:1;
+  border-left:1px solid rgba(59,130,246,.18);
+}
+body.lang-en .spc-left{border-left:none;border-right:1px solid rgba(59,130,246,.18)}
+.spc-right{
+  width:160px;flex-shrink:0;
+  background:linear-gradient(160deg,rgba(59,130,246,.18),rgba(139,92,246,.14));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px 14px;gap:6px;
+}
+.spc-close{
+  position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;
+  background:rgba(239,68,68,.15);border:none;cursor:pointer;color:var(--rd);font-size:13px;
+  display:flex;align-items:center;justify-content:center;transition:.15s;z-index:2;
+}
+body.lang-en .spc-close{right:auto;left:10px}
+.spc-close:hover{background:var(--rd);color:#fff}
+.spc-em{font-size:40px;margin-bottom:6px;text-align:center;line-height:1}
+.spc-name{font-size:18px;font-weight:800;margin-bottom:10px;line-height:1.3;color:var(--tx)}
+.spc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.stag{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;}
+.st-b{background:rgba(59,130,246,.15);color:#60a5fa}
+.st-g{background:rgba(16,185,129,.15);color:#34d399}
+.st-a{background:rgba(245,158,11,.15);color:#fbbf24}
+.st-p{background:rgba(139,92,246,.15);color:#a78bfa}
+.spc-acts{display:flex;gap:8px;flex-wrap:wrap}
+.spc-pr{font-size:34px;font-weight:900;color:var(--b);text-align:center;line-height:1;background:linear-gradient(135deg,var(--b),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.spc-prl{font-size:11px;color:var(--t3);text-align:center;margin-top:3px}
+.spc-badge{background:rgba(59,130,246,.2);color:var(--b);padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;text-align:center;width:100%}
+.spc-stripe{height:4px;background:linear-gradient(90deg,var(--b),var(--pu),var(--cy));position:absolute;top:0;left:0;right:0}
+
+/* ─── SEARCH CARD ─── */
+.sc-box{background:var(--cd);border:1px solid var(--bo);border-radius:var(--r);padding:14px;margin-bottom:13px}
+.sc-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sc-hdr-t{font-size:13px;font-weight:700}
+.sc-hdr-s{font-size:10.5px;color:var(--t3);margin-top:1px}
+.sc-iw{position:relative;max-width:480px}
+.sc-iw input{padding-right:38px}
+body.lang-en .sc-iw input{padding-right:12px;padding-left:38px}
+.sc-iw .sc-ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--t3);pointer-events:none}
+body.lang-en .sc-iw .sc-ico{right:auto;left:12px}
+
+/* ─── KPI ─── */
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:13px}
+.kc{background:var(--cd);border:1px solid var(--bo);border-radius:var(--r);padding:14px;position:relative;overflow:hidden;transition:.2s;cursor:default;}
+.kc:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.kc-gw{position:absolute;top:-25px;right:-25px;width:80px;height:80px;border-radius:50%;opacity:.07;background:var(--kcc,var(--b))}
+.kc-ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:9px;background:rgba(var(--kcr,59 130 246)/.13);}
+.kc-l{font-size:10.5px;color:var(--t3);font-weight:600;letter-spacing:.3px;margin-bottom:3px}
+.kc-v{font-size:21px;font-weight:800;line-height:1.1}
+.kc-ch{font-size:10px;margin-top:4px;display:flex;align-items:center;gap:3px;color:var(--t3)}
+.kc-ch.up{color:var(--gr)} .kc-ch.dn{color:var(--rd)}
+.kc-bar{height:2px;background:var(--bg4);border-radius:1px;margin-top:9px;overflow:hidden}
+.kc-bf{height:100%;border-radius:1px;background:var(--kcc,var(--b));transition:width 1.1s ease}
+.card{background:var(--cd);border:1px solid var(--bo);border-radius:var(--r);padding:14px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ct2{font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
+.cs{font-size:10px;color:var(--t3);margin-top:2px}
+.ring{position:relative;width:110px;height:110px}
+.ring svg{transform:rotate(-90deg)}
+.ring-lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--b),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ring-s{font-size:9px;color:var(--t3);font-weight:600;letter-spacing:.5px}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bo)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:right;padding:9px 12px;background:var(--cd3);border-bottom:1px solid var(--bo);color:var(--t3);font-weight:600;font-size:10px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+body.lang-en thead th{text-align:left}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .13s;cursor:pointer}
+tbody tr:hover{background:rgba(59,130,246,.05)}
+.tb2{font-weight:600;font-size:13px}
+.ts{font-size:10px;color:var(--t3);margin-top:1px}
+.fg{margin-bottom:11px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fgf{grid-column:1/-1}
+.fl{display:block;font-size:10px;font-weight:700;color:var(--t3);margin-bottom:4px;letter-spacing:.4px;text-transform:uppercase}
+.fi{width:100%;padding:9px 12px;border:1px solid var(--bo2);border-radius:var(--rs);background:var(--cd2);color:var(--tx);font-family:var(--f);font-size:13px;outline:none;transition:.2s;}
+.fi:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(59,130,246,.12);background:var(--cd)}
+.fi::placeholder{color:var(--t3)}
+select.fi{appearance:none;cursor:pointer}
+textarea.fi{resize:vertical;min-height:65px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 15px;border-radius:var(--rs);font-family:var(--f);font-size:12.5px;font-weight:600;cursor:pointer;border:none;transition:.18s;white-space:nowrap;line-height:1}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.bp{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.28)}
+.bp:hover{box-shadow:0 6px 18px rgba(59,130,246,.38)}
+.bg2{background:linear-gradient(135deg,var(--gr),#059669);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.22)}
+.br{background:linear-gradient(135deg,var(--rd),#dc2626);color:#fff;box-shadow:0 4px 12px rgba(239,68,68,.22)}
+.ba{background:linear-gradient(135deg,var(--am),#d97706);color:#fff}
+.bo2b{background:transparent;border:1px solid var(--bo2);color:var(--t2)}
+.bo2b:hover{border-color:var(--b);color:var(--b);background:rgba(59,130,246,.07)}
+.bs{padding:6px 12px;font-size:11.5px;border-radius:var(--rx)}
+.bx{padding:4px 9px;font-size:10.5px;border-radius:5px}
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600}
+.bg{background:rgba(16,185,129,.12);color:#34d399}
+.ba2{background:rgba(245,158,11,.12);color:#fbbf24}
+.brd{background:rgba(239,68,68,.12);color:#f87171}
+.bb{background:rgba(59,130,246,.12);color:#60a5fa}
+.bp2{background:rgba(139,92,246,.12);color:#a78bfa}
+.bn{background:rgba(148,163,184,.1);color:var(--t2)}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px)}
+.ov.on{display:flex}
+.modal{background:var(--cd);border:1px solid var(--bo2);border-radius:17px;padding:20px;max-width:490px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,.6);animation:pIn .2s cubic-bezier(.34,1.4,.64,1);}
+@keyframes pIn{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:none}}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mt{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
+.mc{width:26px;height:26px;border-radius:50%;border:1px solid var(--bo);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t2);transition:.15s}
+.mc:hover{background:var(--rd);color:#fff;border-color:var(--rd)}
+.qb-row{display:flex;gap:7px;flex-wrap:wrap;background:var(--cd);border:1px solid var(--bo);border-radius:var(--r);padding:11px 13px;margin-bottom:12px;align-items:center}
+.qbl{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;margin-left:auto}
+body.lang-en .qbl{margin-left:0;margin-right:auto}
+.qb{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--rs);font-family:var(--f);font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--bo2);background:var(--cd2);color:var(--t2);transition:.18s}
+.qb:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.qbg{border-color:rgba(16,185,129,.35);color:var(--gr);background:rgba(16,185,129,.07)}
+.qbb{border-color:rgba(59,130,246,.35);color:var(--b);background:rgba(59,130,246,.07)}
+.qba{border-color:rgba(245,158,11,.35);color:var(--am);background:rgba(245,158,11,.07)}
+.qbr{border-color:rgba(239,68,68,.35);color:var(--rd);background:rgba(239,68,68,.07)}
+.qbp{border-color:rgba(139,92,246,.35);color:var(--pu);background:rgba(139,92,246,.07)}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.sh-l .sh-t{font-size:13.5px;font-weight:700}
+.sh-l .sh-s{font-size:10.5px;color:var(--t3);margin-top:2px}
+.sh-r{display:flex;gap:6px;align-items:center}
+.pbar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.pbf{height:100%;border-radius:3px;transition:width 1.2s ease}
+.tg{position:relative;width:37px;height:21px;cursor:pointer;flex-shrink:0}
+.tg input{opacity:0;position:absolute;width:0;height:0}
+.tgs{position:absolute;inset:0;background:var(--bg4);border-radius:20px;transition:.24s;border:1px solid var(--bo2)}
+.tg input:checked+.tgs{background:var(--b)}
+.tgs::before{content:'';position:absolute;width:15px;height:15px;right:2px;bottom:2px;background:#fff;border-radius:50%;transition:.24s}
+.tg input:checked+.tgs::before{transform:translateX(-16px)}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bo)}
+.set-row:last-child{border-bottom:none}
+.set-l{font-size:13px;font-weight:600}
+.set-s{font-size:11px;color:var(--t3);margin-top:2px}
+.avatar-up{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--pu));display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;cursor:pointer;position:relative;overflow:hidden;border:3px solid var(--bo2);transition:.2s;margin:0 auto 10px;}
+.avatar-up:hover{border-color:var(--b);box-shadow:0 0 18px rgba(59,130,246,.3)}
+.avatar-up img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.av-ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;font-size:18px;}
+.avatar-up:hover .av-ov{opacity:1}
+
+/* ─── FILES (ENHANCED) ─── */
+.fdrop{border:2px dashed var(--bo2);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:.2s;background:var(--cd2);}
+.fdrop:hover,.fdrop.dg{border-color:var(--b);background:rgba(59,130,246,.05)}
+.fg2x{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px;margin-top:14px}
+.fcard{background:var(--cd2);border:1px solid var(--bo);border-radius:var(--rs);padding:14px;text-align:center;cursor:pointer;transition:.2s;position:relative;overflow:hidden;}
+.fcard:hover{border-color:var(--b);transform:translateY(-2px);box-shadow:var(--sh2)}
+.fic{font-size:32px;margin-bottom:8px}
+.fn{font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fsz{font-size:10px;color:var(--t3);margin-top:3px}
+.fdel{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:rgba(239,68,68,.14);color:var(--rd);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:10px;transition:.15s;}
+.fcard:hover .fdel{display:flex}
+.fdel:hover{background:var(--rd);color:#fff}
+.fcard-open{
+  display:none;align-items:center;justify-content:center;
+  width:100%;margin-top:8px;font-size:10.5px;color:var(--b);
+  gap:3px;font-weight:600;padding:5px;border-radius:var(--rx);
+  background:rgba(59,130,246,.1);border:none;cursor:pointer;
+  font-family:var(--f);
+}
+.fcard:hover .fcard-open{display:flex}
+
+/* ─── EXCEL VIEWER MODAL ─── */
+.xl-modal{max-width:90vw;width:900px;max-height:85vh}
+.xl-tabs{display:flex;gap:5px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.xl-tab{padding:5px 13px;border-radius:var(--rs);border:1px solid var(--bo2);background:var(--cd2);color:var(--t2);font-size:11.5px;cursor:pointer;font-family:var(--f);white-space:nowrap;transition:.15s}
+.xl-tab.on{background:rgba(59,130,246,.14);border-color:rgba(59,130,246,.4);color:var(--b)}
+.xl-tbl-wrap{overflow:auto;max-height:52vh;border-radius:var(--rs);border:1px solid var(--bo)}
+.xl-tbl{border-collapse:collapse;font-size:12px;min-width:100%}
+.xl-tbl th{background:var(--cd3);padding:7px 11px;border-bottom:1px solid var(--bo);border-right:1px solid var(--bo);color:var(--t2);font-size:10px;white-space:nowrap;text-align:center;font-weight:600}
+.xl-tbl td{padding:6px 11px;border-bottom:1px solid var(--bo);border-right:1px solid var(--bo);white-space:nowrap;font-size:11.5px}
+.xl-tbl tr:hover td{background:rgba(59,130,246,.05)}
+.xl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.xl-meta{font-size:11px;color:var(--t3)}
+
+/* ─── NOTIF ─── */
+.np{position:absolute;top:100%;right:0;width:290px;background:var(--cd);border:1px solid var(--bo2);border-radius:var(--r);box-shadow:var(--sh);z-index:200;display:none;margin-top:4px;overflow:hidden;}
+.np.on{display:block;animation:dIn .14s ease}
+.np-h{padding:11px 13px;border-bottom:1px solid var(--bo);font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:space-between}
+.ni2{padding:10px 13px;border-bottom:1px solid var(--bo);display:flex;gap:9px;cursor:pointer;transition:.13s}
+.ni2:hover{background:var(--bg4)}
+.ni2:last-child{border-bottom:none}
+.nic{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.nt{font-size:11.5px;line-height:1.5}
+.ntm{font-size:10px;color:var(--t3);margin-top:1px}
+#TW{position:fixed;bottom:18px;left:18px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+body.lang-en #TW{left:auto;right:18px}
+.toast{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--cd);border:1px solid var(--bo2);border-radius:var(--rs);box-shadow:var(--sh);font-size:12.5px;min-width:200px;animation:tIn .23s ease;pointer-events:all;position:relative;overflow:hidden;}
+@keyframes tIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.toast.out{animation:tOut .23s ease forwards}
+@keyframes tOut{to{opacity:0;transform:translateX(-14px)}}
+.adm{display:none}
+.role-admin .adm{display:initial}
+.adm-flex{display:none!important}
+.role-admin .adm-flex{display:flex!important}
+.adm-btn{display:none!important}
+.role-admin .adm-btn{display:inline-flex!important}
+.emp{display:flex;flex-direction:column;align-items:center;padding:36px;color:var(--t3);gap:7px}
+.emp-ic{font-size:42px;opacity:.22}
+.emp-t{font-size:12.5px}
+.dv{height:1px;background:var(--bo);margin:11px 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.g32{display:grid;grid-template-columns:2fr 1fr;gap:13px}
+.mb{margin-bottom:13px}
+.fb{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:11px}
+
+/* ─── LANG PILL in topbar ─── */
+.lang-pill{display:flex;border:1px solid var(--bo2);border-radius:20px;overflow:hidden;flex-shrink:0}
+.lang-pill-b{padding:4px 10px;font-size:10.5px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--t2);font-family:var(--f);transition:.18s}
+.lang-pill-b.on{background:var(--b);color:#fff}
+
+@media(max-width:1100px){.kr{grid-template-columns:1fr 1fr}.g3,.g2,.g32{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .sb{position:fixed;height:100vh;z-index:100;transform:translateX(100%);transition:transform .26s}
+  .sb.mob{transform:none!important}
+  .mn{width:100%}
+  .kr{grid-template-columns:1fr 1fr}
+  .gsw{max-width:160px}
+  .tck{display:none}
+  .spcard-inner{flex-direction:column}
+  .spc-right{width:100%;flex-direction:row;justify-content:space-around;padding:14px}
+}
+@media print{.sb,.tb,.qb-row,#TW{display:none!important}.mn{height:auto;overflow:visible}.ct{overflow:visible}body{background:#fff!important;color:#000!important}}
+</style>
+</head>
+<body class="dk">
+<div id="TW"></div>
+
+<!-- ══════════════════ LOGIN ══════════════════ -->
+<div id="LS">
+  <div class="lb">
+    <div class="ll">
+      <div class="ll-ic">AA</div>
+      <h1>Ali Alsuhaibani</h1>
+      <p id="ls-sub">CRM Pro — نظام المبيعات الذكي</p>
+    </div>
+    <div class="lang-row">
+      <button class="langb on" onclick="setLang('ar',true)">🇸🇦 عربي</button>
+      <button class="langb" onclick="setLang('en',true)">🇺🇸 English</button>
+    </div>
+    <div class="rt">
+      <button class="rtb on" id="rt-admin" onclick="selRole('admin')">👑 <span data-ar="مدير" data-en="Admin">مدير</span></button>
+      <button class="rtb" id="rt-user" onclick="selRole('user')">👁️ <span data-ar="مستخدم" data-en="User">مستخدم</span></button>
+    </div>
+    <div id="rhint" style="font-size:11px;color:var(--t3);text-align:center;margin-bottom:11px;min-height:16px"></div>
+    <div class="pd" id="pdots">
+      <div class="pdot"></div><div class="pdot"></div>
+      <div class="pdot"></div><div class="pdot"></div>
+    </div>
+    <div class="pg-grid" id="pinGrid">
+      <button class="pb" onclick="pp('1')">1</button>
+      <button class="pb" onclick="pp('2')">2</button>
+      <button class="pb" onclick="pp('3')">3</button>
+      <button class="pb" onclick="pp('4')">4</button>
+      <button class="pb" onclick="pp('5')">5</button>
+      <button class="pb" onclick="pp('6')">6</button>
+      <button class="pb" onclick="pp('7')">7</button>
+      <button class="pb" onclick="pp('8')">8</button>
+      <button class="pb" onclick="pp('9')">9</button>
+      <button class="pb pz" onclick="pp('0')">0</button>
+      <button class="pb dl" onclick="pdel()">⌫</button>
+    </div>
+    <div class="lh" id="lhint">أدخل رمز الدخول</div>
+  </div>
+</div>
+
+<!-- ══════════════════ APP ══════════════════ -->
+<div class="app" id="APP" style="display:none">
+  <nav class="sb" id="SB">
+    <div class="lw">
+      <div class="lic">AA</div>
+      <div class="lt2"><b>Ali Alsuhaibani</b><span>CRM Pro ⚡</span></div>
+    </div>
+    <div class="nsc">
+      <div class="ns" data-ar="الرئيسية" data-en="Main">الرئيسية</div>
+      <div class="nv on" onclick="go('dashboard',this)"><span class="ni">⚡</span><span class="nl" data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</span></div>
+      <div class="ns" data-ar="المبيعات" data-en="Sales">المبيعات</div>
+      <div class="nv" onclick="go('products',this)"><span class="ni">📦</span><span class="nl" data-ar="الأصناف" data-en="Products">الأصناف</span></div>
+      <div class="nv" onclick="go('orders',this)"><span class="ni">🛒</span><span class="nl" data-ar="الأوردرات" data-en="Orders">الأوردرات</span><span class="nb" id="ordBadge">0</span></div>
+      <div class="nv" onclick="go('returns',this)"><span class="ni">↩️</span><span class="nl" data-ar="المرتجعات" data-en="Returns">المرتجعات</span></div>
+      <div class="ns" data-ar="العملاء" data-en="Clients">العملاء</div>
+      <div class="nv" onclick="go('customers',this)"><span class="ni">👥</span><span class="nl" data-ar="العملاء" data-en="Customers">العملاء</span></div>
+      <div class="nv" onclick="go('cust_items',this)"><span class="ni">🔗</span><span class="nl" data-ar="أصناف العميل" data-en="Customer Items">أصناف العميل</span></div>
+      <div class="ns" data-ar="الأداء" data-en="Performance">الأداء</div>
+      <div class="nv" onclick="go('targets',this)"><span class="ni">🎯</span><span class="nl" data-ar="التارقت" data-en="Targets">التارقت</span></div>
+      <div class="ns" data-ar="الأدوات" data-en="Tools">الأدوات</div>
+      <div class="nv" onclick="go('files',this)"><span class="ni">📁</span><span class="nl" data-ar="الملفات" data-en="Files">الملفات</span></div>
+      <div class="nv adm" onclick="go('settings',this)"><span class="ni">⚙️</span><span class="nl" data-ar="الإعدادات" data-en="Settings">الإعدادات</span></div>
+    </div>
+    <div class="sft">
+      <div class="sfb">
+        <button class="scb" onclick="toggleTheme()" id="thBtn" title="Theme">🌙</button>
+        <button class="scb" onclick="toggleMini()" title="Collapse">◀</button>
+        <button class="scb" onclick="toggleFS()" title="Fullscreen">⛶</button>
+        <button class="scb" onclick="logout()" title="Logout">🔒</button>
+      </div>
+      <div class="ac2" onclick="go('settings',null)">
+        <div class="av" id="sideAv"><span id="sideAvTxt">AA</span><img id="sideAvImg" style="display:none"></div>
+        <div class="sc-info"><div class="sc-name" id="sideNm">Ali Alsuhaibani</div><div class="sc-role" id="sideRl">مدير</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mn">
+    <div class="tb">
+      <div style="cursor:pointer;font-size:17px;color:var(--t2)" onclick="toggleMob()">☰</div>
+      <div class="tb-ti" id="TBT"><span>⚡</span><span data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</span></div>
+      <div class="tb-sp"></div>
+      <div class="gsw">
+        <span class="gs-ico">🔍</span>
+        <input class="gsi" id="GSI" placeholder="بحث: اسم/رقم/باركود → Enter" onkeydown="gsKey(event)" oninput="gsLive(this.value)" autocomplete="off">
+        <div class="gsd" id="GSD"></div>
+      </div>
+      <!-- Lang toggle -->
+      <div class="lang-pill">
+        <button class="lang-pill-b on" id="lpAr" onclick="setLang('ar',true)">ع</button>
+        <button class="lang-pill-b" id="lpEn" onclick="setLang('en',true)">EN</button>
+      </div>
+      <div style="position:relative">
+        <button class="tbb" onclick="toggleNp()" id="notifTBB">🔔<span class="tdot" id="ndot" style="display:none"></span></button>
+        <div class="np" id="NP">
+          <div class="np-h"><span data-ar="الإشعارات" data-en="Notifications">الإشعارات</span><button style="border:none;background:none;font-size:10.5px;color:var(--t3);cursor:pointer" onclick="clearNotifs()" data-ar="مسح" data-en="Clear">مسح</button></div>
+          <div id="NL"></div>
+        </div>
+      </div>
+      <div class="tck" id="TCK"></div>
+    </div>
+
+    <div class="ct" id="CT">
+
+      <!-- ════ DASHBOARD ════ -->
+      <div class="pg on" id="pg-dashboard">
+        <div class="qb-row">
+          <span class="qbl" data-ar="إضافة سريعة" data-en="Quick Add">إضافة سريعة</span>
+          <button class="qb qbg" onclick="openM('m-prod')">➕ <span data-ar="صنف" data-en="Product">صنف</span></button>
+          <button class="qb qbb" onclick="openM('m-cust')">👤 <span data-ar="عميل" data-en="Customer">عميل</span></button>
+          <button class="qb qba" onclick="openM('m-ord')">🛒 <span data-ar="أوردر" data-en="Order">أوردر</span></button>
+          <button class="qb qbr" onclick="openM('m-ret')">↩️ <span data-ar="مرتجع" data-en="Return">مرتجع</span></button>
+          <button class="qb qbp adm" onclick="openM('m-tgt')">🎯 <span data-ar="تارقت" data-en="Target">تارقت</span></button>
+        </div>
+
+        <div class="sc-box">
+          <div class="sc-hdr">
+            <span style="font-size:20px">🔎</span>
+            <div>
+              <div class="sc-hdr-t" data-ar="البحث الذكي عن الصنف" data-en="Smart Product Search">البحث الذكي عن الصنف</div>
+              <div class="sc-hdr-s" data-ar="اكتب الاسم أو الرقم أو الباركود ← اضغط Enter للتحديد" data-en="Type name, number or barcode → Press Enter to select">اكتب الاسم أو الرقم أو الباركود ← اضغط Enter للتحديد</div>
+            </div>
+          </div>
+          <div class="sc-iw">
+            <span class="sc-ico">📦</span>
+            <input class="fi" id="DSI" placeholder="ابحث هنا..." onkeydown="dsKey(event)" oninput="dsLive(this.value)" autocomplete="off" style="max-width:480px">
+            <div class="gsd" id="DSD" style="max-width:480px"></div>
+          </div>
+
+          <!-- ENHANCED Product Card -->
+          <div class="spcard" id="SPCARD">
+            <div class="spc-stripe"></div>
+            <button class="spc-close" onclick="clearSel()">✕</button>
+            <div class="spcard-inner">
+              <div class="spc-left">
+                <div class="spc-em" id="SPEM">📦</div>
+                <div class="spc-name" id="SPNM">—</div>
+                <div class="spc-tags" id="SPTG"></div>
+                <div class="spc-acts">
+                  <button class="btn bp" onclick="openM('m-ord')">🛒 <span data-ar="أضف لأوردر" data-en="Add to Order">أضف لأوردر</span></button>
+                  <button class="btn bo2b adm-btn" onclick="editSelProd()">✏️ <span data-ar="تعديل" data-en="Edit">تعديل</span></button>
+                  <button class="btn bo2b" onclick="copySPInfo()">📋 <span data-ar="نسخ" data-en="Copy">نسخ</span></button>
+                </div>
+              </div>
+              <div class="spc-right">
+                <div class="spc-em" style="font-size:48px">📦</div>
+                <div class="spc-pr" id="SPPR">—</div>
+                <div class="spc-prl" data-ar="ريال/وحدة" data-en="SAR/unit">ريال/وحدة</div>
+                <div class="spc-badge" id="SPBOX">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kr" id="KPIGrid"></div>
+        <div class="g32 mb">
+          <div class="card">
+            <div class="ch">
+              <div><div class="ct2">📈 <span data-ar="مخطط المبيعات الشهرية" data-en="Monthly Sales Chart">مخطط المبيعات الشهرية</span></div><div class="cs" data-ar="مقارنة بالتارقت" data-en="vs Target">مقارنة بالتارقت</div></div>
+              <div style="display:flex;gap:4px">
+                <button class="btn bo2b bx" onclick="cprd(6)">6م</button>
+                <button class="btn bo2b bx" onclick="cprd(12)">12م</button>
+              </div>
+            </div>
+            <div style="height:185px"><canvas id="cSales"></canvas></div>
+          </div>
+          <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+            <div style="font-size:12px;font-weight:700;text-align:center" data-ar="التارقت الشهري" data-en="Monthly Target">التارقت الشهري</div>
+            <div class="ring">
+              <svg width="110" height="110" viewBox="0 0 110 110">
+                <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="9"/>
+                <circle id="RingPath" cx="55" cy="55" r="46" fill="none" stroke="url(#RG)" stroke-width="9" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289" style="transition:stroke-dashoffset 1.3s cubic-bezier(.4,0,.2,1)"/>
+                <defs><linearGradient id="RG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+              </svg>
+              <div class="ring-lbl"><div class="ring-pct" id="RPct">0%</div><div class="ring-s" data-ar="محقق" data-en="Achieved">محقق</div></div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--t3)" data-ar="المبيعات" data-en="Sales">المبيعات</div>
+              <div style="font-size:14px;font-weight:800;color:var(--b)" id="RSales">0</div>
+              <div style="font-size:10px;color:var(--t3)" data-ar="من التارقت" data-en="of Target">من التارقت</div>
+              <div style="font-size:12px;font-weight:600;color:var(--t2)" id="RTgt">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="g3 mb">
+          <div class="card"><div class="ch"><div class="ct2">🥧 <span data-ar="حسب العميل" data-en="By Customer">حسب العميل</span></div></div><div style="height:150px"><canvas id="cCust"></canvas></div></div>
+          <div class="card"><div class="ch"><div class="ct2">📊 <span data-ar="أوردرات vs مرتجعات" data-en="Orders vs Returns">أوردرات vs مرتجعات</span></div></div><div style="height:150px"><canvas id="cRet"></canvas></div></div>
+          <div class="card"><div class="ch"><div class="ct2">🏆 <span data-ar="أفضل الأصناف" data-en="Top Products">أفضل الأصناف</span></div></div><div style="height:150px"><canvas id="cTop"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="sh">
+            <div class="sh-l"><div class="sh-t" data-ar="آخر الأوردرات" data-en="Recent Orders">آخر الأوردرات</div></div>
+            <button class="btn bo2b bs" onclick="go('orders',null)" data-ar="عرض الكل" data-en="View All">عرض الكل</button>
+          </div>
+          <div class="tw"><table><thead><tr>
+            <th>#</th><th data-ar="العميل" data-en="Customer">العميل</th><th>PO</th>
+            <th data-ar="التاريخ" data-en="Date">التاريخ</th><th data-ar="السعر" data-en="Price">السعر</th><th data-ar="بعد التوصيل" data-en="After Delivery">بعد التوصيل</th>
+          </tr></thead><tbody id="DashOrdTbl"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ════ PRODUCTS ════ -->
+      <div class="pg" id="pg-products">
+        <div class="sh">
+          <div class="sh-l"><div class="sh-t" data-ar="الأصناف" data-en="Products">الأصناف</div><div class="sh-s" id="ProdCnt">0 صنف</div></div>
+          <div class="sh-r">
+            <label class="btn bo2b bs" style="cursor:pointer">📥 <span data-ar="استيراد CSV" data-en="Import CSV">استيراد CSV</span><input type="file" accept=".csv,.xlsx,.xls" onchange="impProds(this)" style="display:none"></label>
+            <button class="btn bo2b bs" onclick="expProds()">📤</button>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;flex-shrink:0">
+              <label class="tg"><input type="checkbox" id="ShowProdsTg" onchange="renderProds()"><span class="tgs"></span></label>
+              <span data-ar="إظهار الأصناف" data-en="Show Products">إظهار الأصناف</span>
+            </label>
+            <button class="btn bp bs adm-btn" onclick="openM('m-prod')">➕ <span data-ar="صنف جديد" data-en="New Product">صنف جديد</span></button>
+          </div>
+        </div>
+        <div class="fb">
+          <input class="fi" id="PSearch" style="flex:2;min-width:180px;padding:7px 12px;font-size:12.5px" placeholder="بحث: اسم/رقم/باركود/SKU..." oninput="renderProds()">
+        </div>
+        <div class="tw"><table><thead><tr>
+          <th data-ar="رقم الصنف" data-en="#">رقم الصنف</th>
+          <th data-ar="الاسم" data-en="Name">الاسم</th>
+          <th data-ar="الباركود" data-en="Barcode">الباركود</th>
+          <th data-ar="حبات/كرتون" data-en="Pcs/Box">حبات/كرتون</th>
+          <th data-ar="السعر" data-en="Price">السعر</th>
+          <th>SKU</th>
+          <th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+        </tr></thead><tbody id="ProdTbl"></tbody></table></div>
+      </div>
+
+      <!-- ════ ORDERS ════ -->
+      <div class="pg" id="pg-orders">
+        <div class="sh">
+          <div class="sh-l"><div class="sh-t" data-ar="الأوردرات" data-en="Orders">الأوردرات</div><div class="sh-s" id="OrdCnt">0</div></div>
+          <div class="sh-r">
+            <button class="btn bo2b bs" onclick="expOrds()">📤</button>
+            <button class="btn bp bs adm-btn" onclick="openM('m-ord')">➕ <span data-ar="أوردر جديد" data-en="New Order">أوردر جديد</span></button>
+          </div>
+        </div>
+        <div class="card mb" style="padding:11px 13px">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:140px">
+              <div style="font-size:10.5px;color:var(--t3);margin-bottom:5px" data-ar="نسبة التارقت الشهري" data-en="Monthly Target Progress">نسبة التارقت الشهري</div>
+              <div class="pbar"><div class="pbf" id="OrdBar" style="width:0%;background:linear-gradient(90deg,var(--b),var(--pu))"></div></div>
+            </div>
+            <div style="font-size:24px;font-weight:900;color:var(--b)" id="OrdPct">0%</div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--t3)" data-ar="الإجمالي" data-en="Total">الإجمالي</div>
+              <div style="font-size:15px;font-weight:800" id="OrdTotal">0 ر</div>
+            </div>
+          </div>
+        </div>
+        <div class="fb"><input class="fi" id="OSearch" style="flex:2;padding:7px 12px;font-size:12.5px" placeholder="بحث..." oninput="renderOrds()"></div>
+        <div class="tw"><table><thead><tr>
+          <th>#</th><th data-ar="رقم العميل" data-en="Customer ID">رقم العميل</th><th>PO</th>
+          <th data-ar="التاريخ" data-en="Date">التاريخ</th><th data-ar="السعر" data-en="Price">السعر</th><th data-ar="بعد التوصيل" data-en="After Delivery">بعد التوصيل</th><th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+        </tr></thead><tbody id="OrdTbl"></tbody></table></div>
+      </div>
+
+      <!-- ════ RETURNS ════ -->
+      <div class="pg" id="pg-returns">
+        <div class="sh">
+          <div class="sh-l"><div class="sh-t" data-ar="المرتجعات" data-en="Returns">المرتجعات</div><div class="sh-s" id="RetCnt">0</div></div>
+          <div class="sh-r">
+            <button class="btn bo2b bs" onclick="expRets()">📤</button>
+            <button class="btn br bs adm-btn" onclick="openM('m-ret')">↩️ <span data-ar="مرتجع جديد" data-en="New Return">مرتجع جديد</span></button>
+          </div>
+        </div>
+        <div class="fb"><input class="fi" id="RSearch" style="flex:2;padding:7px 12px;font-size:12.5px" placeholder="بحث..." oninput="renderRets()"></div>
+        <div class="tw"><table><thead><tr>
+          <th>#</th><th data-ar="رقم العميل" data-en="Customer">رقم العميل</th><th data-ar="رقم المرجع" data-en="Ref#">رقم المرجع</th>
+          <th data-ar="التاريخ" data-en="Date">التاريخ</th><th data-ar="المبلغ" data-en="Amount">المبلغ</th><th data-ar="السبب" data-en="Reason">السبب</th><th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+        </tr></thead><tbody id="RetTbl"></tbody></table></div>
+      </div>
+
+      <!-- ════ CUSTOMERS ════ -->
+      <div class="pg" id="pg-customers">
+        <div class="sh">
+          <div class="sh-l"><div class="sh-t" data-ar="العملاء" data-en="Customers">العملاء</div><div class="sh-s" id="CustCnt">0</div></div>
+          <div class="sh-r"><button class="btn bp bs adm-btn" onclick="openM('m-cust')">👤 <span data-ar="عميل جديد" data-en="New Customer">عميل جديد</span></button></div>
+        </div>
+        <div class="fb"><input class="fi" id="CSearch" style="flex:2;padding:7px 12px;font-size:12.5px" placeholder="بحث..." oninput="renderCusts()"></div>
+        <div class="tw"><table><thead><tr>
+          <th data-ar="رقم العميل" data-en="ID">رقم العميل</th><th data-ar="الاسم" data-en="Name">الاسم</th><th data-ar="الموقع" data-en="Location">الموقع</th>
+          <th data-ar="ملاحظات" data-en="Notes">ملاحظات</th><th data-ar="إجمالي الأوردرات" data-en="Total Orders">إجمالي الأوردرات</th><th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+        </tr></thead><tbody id="CustTbl"></tbody></table></div>
+      </div>
+
+      <!-- ════ CUST ITEMS ════ -->
+      <div class="pg" id="pg-cust_items">
+        <div class="sh">
+          <div class="sh-l"><div class="sh-t" data-ar="أصناف العميل" data-en="Customer Items">أصناف العميل</div></div>
+          <div class="sh-r"><button class="btn bp bs adm-btn" onclick="openM('m-ci')">🔗 <span data-ar="ربط صنف" data-en="Link Item">ربط صنف</span></button></div>
+        </div>
+        <div class="fb">
+          <select class="fi" id="CIFilt" onchange="renderCI()" style="flex:1;padding:7px 12px;font-size:12.5px"><option value="">كل العملاء</option></select>
+          <input class="fi" id="CISearch" style="flex:2;padding:7px 12px;font-size:12.5px" placeholder="بحث..." oninput="renderCI()">
+        </div>
+        <div class="tw"><table><thead><tr>
+          <th data-ar="العميل" data-en="Customer">العميل</th><th data-ar="الصنف" data-en="Product">الصنف</th><th>SKU</th>
+          <th data-ar="السعر الخاص" data-en="Custom Price">السعر الخاص</th><th data-ar="ملاحظات" data-en="Notes">ملاحظات</th><th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+        </tr></thead><tbody id="CITbl"></tbody></table></div>
+      </div>
+
+      <!-- ════ TARGETS ════ -->
+      <div class="pg" id="pg-targets">
+        <div class="g2 mb">
+          <div class="card">
+            <div class="sh">
+              <div class="sh-l"><div class="sh-t" data-ar="التارقت الحالي" data-en="Current Target">التارقت الحالي</div></div>
+              <button class="btn bp bs adm-btn" onclick="openM('m-tgt')">🎯</button>
+            </div>
+            <div style="text-align:center;padding:8px 0">
+              <div style="font-size:10.5px;color:var(--t3)" data-ar="تارقت الشهر" data-en="Month Target">تارقت الشهر</div>
+              <div style="font-size:32px;font-weight:900;color:var(--b)" id="TgtV">—</div>
+              <div style="font-size:11px;color:var(--t3)" id="TgtM">—</div>
+              <div class="pbar" style="margin:9px 0"><div class="pbf" id="TgtBar" style="width:0%;background:linear-gradient(90deg,var(--gr),var(--b))"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3)">
+                <span data-ar="محقق" data-en="Achieved">محقق</span><span id="TgtPct">0%</span>
+              </div>
+              <div style="font-size:20px;font-weight:800;color:var(--gr);margin-top:6px" id="TgtAch">0 ر</div>
+            </div>
+            <div class="dv"></div>
+            <div class="sh" style="margin-bottom:9px">
+              <div class="sh-t" data-ar="تارقت العملاء" data-en="Customer Targets">تارقت العملاء</div>
+              <button class="btn bo2b bx adm-btn" onclick="openM('m-ctgt')">➕</button>
+            </div>
+            <div class="tw"><table><thead><tr>
+              <th data-ar="العميل" data-en="Customer">العميل</th><th data-ar="الشهر" data-en="Month">الشهر</th><th data-ar="التارقت" data-en="Target">التارقت</th><th data-ar="المحقق" data-en="Achieved">المحقق</th><th>%</th>
+            </tr></thead><tbody id="CTgtTbl"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="sh"><div class="sh-t" data-ar="سجل التارقتات" data-en="Target History">سجل التارقتات</div></div>
+            <div class="tw mb"><table><thead><tr>
+              <th data-ar="الشهر" data-en="Month">الشهر</th><th data-ar="التارقت" data-en="Target">التارقت</th><th data-ar="المحقق" data-en="Achieved">المحقق</th><th>%</th>
+            </tr></thead><tbody id="TgtHistTbl"></tbody></table></div>
+            <div style="font-size:12px;font-weight:700;margin-bottom:8px" data-ar="مخطط التارقتات" data-en="Targets Chart">مخطط التارقتات</div>
+            <div style="height:160px"><canvas id="cTgt"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ FILES (ENHANCED) ════ -->
+      <div class="pg" id="pg-files">
+        <div class="sh">
+          <div class="sh-l"><div class="sh-t" data-ar="إدارة الملفات" data-en="File Manager">إدارة الملفات</div><div class="sh-s" data-ar="اسحب ملفات Excel والتقارير وافتحها مباشرة" data-en="Upload Excel, CSV, PDF and open them directly">اسحب ملفات Excel والتقارير وافتحها مباشرة</div></div>
+          <div class="sh-r">
+            <label class="btn bp bs" style="cursor:pointer">📁 <span data-ar="رفع ملف" data-en="Upload">رفع ملف</span><input type="file" id="FUP" multiple accept=".xlsx,.xls,.csv,.pdf,.png,.jpg,.jpeg" onchange="handleFUp(this)" style="display:none"></label>
+          </div>
+        </div>
+        <div class="fdrop" id="FDrop" onclick="document.getElementById('FUP').click()" ondragover="event.preventDefault();this.classList.add('dg')" ondragleave="this.classList.remove('dg')" ondrop="handleFDrop(event)">
+          <div style="font-size:38px;margin-bottom:10px">📂</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px" data-ar="اسحب الملفات هنا أو اضغط للاختيار" data-en="Drag files here or click to choose">اسحب الملفات هنا أو اضغط للاختيار</div>
+          <div style="font-size:11px;color:var(--t3)" data-ar="Excel، CSV، PDF، صور — اضغط على الملف لفتحه مباشرة" data-en="Excel, CSV, PDF, Images — click to open directly">Excel، CSV، PDF، صور — اضغط على الملف لفتحه مباشرة</div>
+        </div>
+        <div class="fg2x" id="FGrid"></div>
+      </div>
+
+      <!-- ════ SETTINGS ════ -->
+      <div class="pg" id="pg-settings">
+        <div class="g2">
+          <div class="card">
+            <div class="ct2" style="margin-bottom:14px">👤 <span data-ar="الملف الشخصي" data-en="Profile">الملف الشخصي</span></div>
+            <div style="text-align:center;margin-bottom:16px">
+              <div class="avatar-up" id="AvatarUp" onclick="document.getElementById('AvatarIn').click()">
+                <span id="AvTxt">AA</span><img id="AvImg" style="display:none"><div class="av-ov">📷</div>
+              </div>
+              <input type="file" id="AvatarIn" accept="image/*" onchange="handleAvatar(this)" style="display:none">
+              <div style="font-size:11px;color:var(--t3)" data-ar="اضغط لتغيير الصورة" data-en="Click to change photo">اضغط لتغيير الصورة</div>
+            </div>
+            <div class="fg"><label class="fl" data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label><input class="fi" id="SName" value="Ali Alsuhaibani"></div>
+            <div class="fg"><label class="fl" data-ar="المسمى الوظيفي" data-en="Job Title">المسمى الوظيفي</label><input class="fi" id="STitle" value="مندوب مبيعات"></div>
+            <div class="fg"><label class="fl" data-ar="الجوال" data-en="Phone">الجوال</label><input class="fi" id="SPhone" placeholder="05XXXXXXXX"></div>
+            <div class="fg"><label class="fl" data-ar="الشركة" data-en="Company">الشركة</label><input class="fi" id="SComp" placeholder="..."></div>
+            <div class="fg"><label class="fl" data-ar="المنطقة" data-en="Region">المنطقة</label><input class="fi" id="SRegion" placeholder="الرياض..."></div>
+            <button class="btn bp" onclick="saveProf()">💾 <span data-ar="حفظ الملف" data-en="Save Profile">حفظ الملف</span></button>
+          </div>
+          <div>
+            <div class="card mb">
+              <div class="ct2" style="margin-bottom:13px">⚙️ <span data-ar="إعدادات التطبيق" data-en="App Settings">إعدادات التطبيق</span></div>
+              <div class="set-row">
+                <div><div class="set-l" data-ar="الوضع الليلي" data-en="Dark Mode">الوضع الليلي</div><div class="set-s" data-ar="تغيير مظهر التطبيق" data-en="Change app appearance">تغيير مظهر التطبيق</div></div>
+                <label class="tg"><input type="checkbox" id="DarkTg" onchange="setTheme(this.checked)"><span class="tgs"></span></label>
+              </div>
+              <div class="set-row">
+                <div><div class="set-l" data-ar="اللغة" data-en="Language">اللغة</div><div class="set-s" data-ar="عربي أو إنجليزي" data-en="Arabic or English">عربي أو إنجليزي</div></div>
+                <div class="lang-pill">
+                  <button class="lang-pill-b on" id="lpAr2" onclick="setLang('ar',true)">ع</button>
+                  <button class="lang-pill-b" id="lpEn2" onclick="setLang('en',true)">EN</button>
+                </div>
+              </div>
+              <div class="set-row">
+                <div><div class="set-l" data-ar="الإشعارات" data-en="Notifications">الإشعارات</div></div>
+                <label class="tg"><input type="checkbox" id="NotifTg" checked><span class="tgs"></span></label>
+              </div>
+            </div>
+            <div class="card mb">
+              <div class="ct2" style="margin-bottom:13px">🔐 <span data-ar="الأمان والرموز" data-en="Security & PINs">الأمان والرموز</span></div>
+              <div class="fg"><label class="fl" data-ar="رمز المدير (4 أرقام)" data-en="Admin PIN (4 digits)">رمز المدير (4 أرقام)</label><input class="fi" type="password" id="AdminPin" maxlength="4" placeholder="****"></div>
+              <div class="fg"><label class="fl" data-ar="رمز المستخدم (4 أرقام)" data-en="User PIN (4 digits)">رمز المستخدم (4 أرقام)</label><input class="fi" type="password" id="UserPin" maxlength="4" placeholder="****"></div>
+              <button class="btn ba bs" onclick="savePins()">🔐 <span data-ar="حفظ الرموز" data-en="Save PINs">حفظ الرموز</span></button>
+            </div>
+            <div class="card">
+              <div class="ct2" style="margin-bottom:13px">💾 <span data-ar="إدارة البيانات" data-en="Data Management">إدارة البيانات</span></div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap">
+                <button class="btn bo2b bs" onclick="expAll()">📦 <span data-ar="تصدير الكل" data-en="Export All">تصدير الكل</span></button>
+                <label class="btn bo2b bs" style="cursor:pointer">📥 <span data-ar="استيراد" data-en="Import">استيراد</span><input type="file" accept=".json" onchange="impAll(this)" style="display:none"></label>
+                <button class="btn br bs" onclick="clrAll()">🗑️ <span data-ar="مسح الكل" data-en="Clear All">مسح الكل</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODALS ════ -->
+<div class="ov" id="m-prod"><div class="modal">
+  <div class="mh"><div class="mt">📦 <span id="MPT" data-ar="صنف جديد" data-en="New Product">صنف جديد</span></div><button class="mc" onclick="closeM('m-prod')">✕</button></div>
+  <input type="hidden" id="mp-id">
+  <div class="fg2">
+    <div class="fg"><label class="fl" data-ar="رقم الصنف" data-en="Product #">رقم الصنف</label><input class="fi" id="mp-num" placeholder="1001"></div>
+    <div class="fg"><label class="fl" data-ar="اسم الصنف *" data-en="Product Name *">اسم الصنف *</label><input class="fi" id="mp-name" placeholder="..."></div>
+    <div class="fg"><label class="fl" data-ar="الباركود" data-en="Barcode">الباركود</label><input class="fi" id="mp-bc" placeholder="600100..."></div>
+    <div class="fg"><label class="fl" data-ar="حبات/كرتون" data-en="Pcs/Box">حبات/كرتون</label><input class="fi" type="number" id="mp-box" placeholder="12" min="1"></div>
+    <div class="fg"><label class="fl" data-ar="السعر (ريال)" data-en="Price (SAR)">السعر (ريال)</label><input class="fi" type="number" id="mp-pr" placeholder="0.00" step="0.01"></div>
+    <div class="fg"><label class="fl">SKU</label><input class="fi" id="mp-sku" placeholder="SKU-001"></div>
+  </div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-prod')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn bp" onclick="saveProd()">💾 <span data-ar="حفظ" data-en="Save">حفظ</span></button>
+  </div>
+</div></div>
+
+<div class="ov" id="m-cust"><div class="modal" style="max-width:400px">
+  <div class="mh"><div class="mt">👤 <span id="MCT" data-ar="عميل جديد" data-en="New Customer">عميل جديد</span></div><button class="mc" onclick="closeM('m-cust')">✕</button></div>
+  <input type="hidden" id="mc-id">
+  <div class="fg"><label class="fl" data-ar="رقم العميل *" data-en="Customer ID *">رقم العميل *</label><input class="fi" id="mc-cid" placeholder="C001"></div>
+  <div class="fg"><label class="fl" data-ar="الاسم *" data-en="Name *">الاسم *</label><input class="fi" id="mc-nm" placeholder="..."></div>
+  <div class="fg"><label class="fl" data-ar="الموقع" data-en="Location">الموقع</label><input class="fi" id="mc-loc" placeholder="..."></div>
+  <div class="fg"><label class="fl" data-ar="ملاحظات" data-en="Notes">ملاحظات</label><textarea class="fi" id="mc-nt" placeholder="..."></textarea></div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-cust')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn bp" onclick="saveCust()">💾 <span data-ar="حفظ" data-en="Save">حفظ</span></button>
+  </div>
+</div></div>
+
+<div class="ov" id="m-ord"><div class="modal" style="max-width:430px">
+  <div class="mh"><div class="mt">🛒 <span id="MOT" data-ar="أوردر جديد" data-en="New Order">أوردر جديد</span></div><button class="mc" onclick="closeM('m-ord')">✕</button></div>
+  <input type="hidden" id="mo-id">
+  <div class="fg2">
+    <div class="fg"><label class="fl" data-ar="العميل *" data-en="Customer *">العميل *</label><select class="fi" id="mo-cust"><option value="">اختر عميل...</option></select></div>
+    <div class="fg"><label class="fl">PO</label><input class="fi" id="mo-po" placeholder="PO-0001"></div>
+    <div class="fg"><label class="fl" data-ar="التاريخ" data-en="Date">التاريخ</label><input class="fi" type="date" id="mo-dt"></div>
+    <div class="fg"><label class="fl" data-ar="السعر *" data-en="Price *">السعر *</label><input class="fi" type="number" id="mo-pr" placeholder="0" step="0.01" oninput="autoDP()"></div>
+    <div class="fg fgf"><label class="fl" data-ar="السعر بعد التوصيل" data-en="Price after Delivery">السعر بعد التوصيل</label><input class="fi" type="number" id="mo-dpr" placeholder="0" step="0.01"></div>
+  </div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-ord')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn bg2" onclick="saveOrd()">💾 <span data-ar="حفظ" data-en="Save">حفظ</span></button>
+  </div>
+</div></div>
+
+<div class="ov" id="m-ret"><div class="modal" style="max-width:420px">
+  <div class="mh"><div class="mt">↩️ <span id="MRT" data-ar="مرتجع جديد" data-en="New Return">مرتجع جديد</span></div><button class="mc" onclick="closeM('m-ret')">✕</button></div>
+  <input type="hidden" id="mr-id">
+  <div class="fg2">
+    <div class="fg"><label class="fl" data-ar="العميل *" data-en="Customer *">العميل *</label><select class="fi" id="mr-cust"><option value="">اختر...</option></select></div>
+    <div class="fg"><label class="fl" data-ar="رقم المرجع" data-en="Ref #">رقم المرجع</label><input class="fi" id="mr-ref" placeholder="REF-001"></div>
+    <div class="fg"><label class="fl" data-ar="التاريخ" data-en="Date">التاريخ</label><input class="fi" type="date" id="mr-dt"></div>
+    <div class="fg"><label class="fl" data-ar="المبلغ" data-en="Amount">المبلغ</label><input class="fi" type="number" id="mr-amt" placeholder="0" step="0.01"></div>
+    <div class="fg fgf"><label class="fl" data-ar="السبب" data-en="Reason">السبب</label><textarea class="fi" id="mr-rsn" placeholder="..."></textarea></div>
+  </div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-ret')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn br" onclick="saveRet()">💾 <span data-ar="حفظ" data-en="Save">حفظ</span></button>
+  </div>
+</div></div>
+
+<div class="ov" id="m-tgt"><div class="modal" style="max-width:340px">
+  <div class="mh"><div class="mt">🎯 <span data-ar="تعيين التارقت" data-en="Set Target">تعيين التارقت</span></div><button class="mc" onclick="closeM('m-tgt')">✕</button></div>
+  <div class="fg"><label class="fl" data-ar="الشهر/السنة" data-en="Month/Year">الشهر/السنة</label><input class="fi" type="month" id="mt-mo"></div>
+  <div class="fg"><label class="fl" data-ar="قيمة التارقت (ريال)" data-en="Target Value (SAR)">قيمة التارقت (ريال)</label><input class="fi" type="number" id="mt-vl" placeholder="0" step="0.01"></div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-tgt')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn bp" onclick="saveTgt()">🎯 <span data-ar="حفظ" data-en="Save">حفظ</span></button>
+  </div>
+</div></div>
+
+<div class="ov" id="m-ctgt"><div class="modal" style="max-width:340px">
+  <div class="mh"><div class="mt">🎯 <span data-ar="تارقت عميل" data-en="Customer Target">تارقت عميل</span></div><button class="mc" onclick="closeM('m-ctgt')">✕</button></div>
+  <div class="fg"><label class="fl" data-ar="العميل" data-en="Customer">العميل</label><select class="fi" id="mct-c"><option value="">اختر...</option></select></div>
+  <div class="fg"><label class="fl" data-ar="الشهر" data-en="Month">الشهر</label><input class="fi" type="month" id="mct-mo"></div>
+  <div class="fg"><label class="fl" data-ar="التارقت (ريال)" data-en="Target (SAR)">التارقت (ريال)</label><input class="fi" type="number" id="mct-vl" placeholder="0"></div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-ctgt')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn bp" onclick="saveCtgt()">💾</button>
+  </div>
+</div></div>
+
+<div class="ov" id="m-ci"><div class="modal">
+  <div class="mh"><div class="mt">🔗 <span id="MCIT" data-ar="ربط صنف بعميل" data-en="Link Item to Customer">ربط صنف بعميل</span></div><button class="mc" onclick="closeM('m-ci')">✕</button></div>
+  <input type="hidden" id="mci-id">
+  <div class="fg"><label class="fl" data-ar="العميل" data-en="Customer">العميل</label><select class="fi" id="mci-c"><option value="">اختر...</option></select></div>
+  <div class="fg"><label class="fl" data-ar="الصنف" data-en="Product">الصنف</label><select class="fi" id="mci-p"><option value="">اختر...</option></select></div>
+  <div class="fg2">
+    <div class="fg"><label class="fl">SKU</label><input class="fi" id="mci-sku" placeholder="SKU..."></div>
+    <div class="fg"><label class="fl" data-ar="سعر العميل" data-en="Customer Price">سعر العميل</label><input class="fi" type="number" id="mci-pr" placeholder="0" step="0.01"></div>
+  </div>
+  <div class="fg"><label class="fl" data-ar="ملاحظات" data-en="Notes">ملاحظات</label><textarea class="fi" id="mci-nt" placeholder="..."></textarea></div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:11px">
+    <button class="btn bo2b" onclick="closeM('m-ci')" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+    <button class="btn bp" onclick="saveCI()">💾 <span data-ar="حفظ" data-en="Save">حفظ</span></button>
+  </div>
+</div></div>
+
+<!-- EXCEL VIEWER MODAL -->
+<div class="ov" id="m-xl"><div class="modal xl-modal">
+  <div class="xl-hdr">
+    <div class="mt" id="xl-title">📊 Excel Viewer</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="xl-meta" id="xl-meta"></span>
+      <button class="mc" onclick="closeM('m-xl')">✕</button>
+    </div>
+  </div>
+  <div class="xl-tabs" id="xl-tabs"></div>
+  <div class="xl-tbl-wrap"><table class="xl-tbl" id="xl-tbl"><tbody></tbody></table></div>
+</div></div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATABASE
+═══════════════════════════════════════ */
+const DB={
+  g:k=>{try{return JSON.parse(localStorage.getItem('crm_'+k)||'null')}catch{return null}},
+  s:(k,v)=>{try{localStorage.setItem('crm_'+k,JSON.stringify(v))}catch{}},
+  l:k=>DB.g(k)||[],
+  add:(k,v)=>{const a=DB.l(k);a.push(v);DB.s(k,a);return v},
+  upd:(k,id,v)=>{const a=DB.l(k);const i=a.findIndex(x=>x.id===id);if(i>-1){a[i]={...a[i],...v};DB.s(k,a);return true}return false},
+  del:(k,id)=>{DB.s(k,DB.l(k).filter(x=>x.id!==id))},
+};
+
+function seed(){
+  if(DB.l('prods').length)return;
+  [{id:'p1',num:'1001',name:'كابل HDMI 5م',bc:'600101',box:12,price:45,sku:'HD-5M'},
+   {id:'p2',num:'1002',name:'طابعة ليزر HP',bc:'600102',box:1,price:1200,sku:'PR-HP'},
+   {id:'p3',num:'1003',name:'شاشة LED 24"',bc:'600103',box:1,price:800,sku:'MN-24'},
+   {id:'p4',num:'1004',name:'لابتوب Core i5',bc:'600104',box:1,price:2800,sku:'LT-I5'},
+   {id:'p5',num:'1005',name:'ماوس لاسلكي',bc:'600105',box:24,price:85,sku:'MS-WL'},
+  ].forEach(p=>DB.add('prods',p));
+  [{id:'c1',cid:'C001',name:'محمد الحارثي',loc:'الرياض',notes:'عميل مميز'},
+   {id:'c2',cid:'C002',name:'سلمى الزهراني',loc:'جدة',notes:''},
+   {id:'c3',cid:'C003',name:'فهد الشمري',loc:'الدمام',notes:'يفضل التواصل صباحاً'},
+  ].forEach(c=>DB.add('custs',c));
+  const td=new Date().toISOString().split('T')[0];
+  [{id:'o1',cid:'C001',po:'PO-001',dt:td,price:5400,dprice:5600},
+   {id:'o2',cid:'C002',po:'PO-002',dt:td,price:3200,dprice:3350},
+   {id:'o3',cid:'C003',po:'PO-003',dt:td,price:8800,dprice:9100},
+  ].forEach(o=>DB.add('ords',o));
+  const m=new Date().toISOString().slice(0,7);
+  DB.s('tgt_cur',{month:m,value:30000});
+}
+seed();
+
+/* ═══════════════════════════════════════
+   LANGUAGE SYSTEM
+═══════════════════════════════════════ */
+let curLang = localStorage.getItem('crm_lang') || 'ar';
+
+const T = {
+  ar: {
+    dashboard:'⚡ لوحة التحكم', products:'📦 الأصناف', orders:'🛒 الأوردرات',
+    returns:'↩️ المرتجعات', customers:'👥 العملاء', cust_items:'🔗 أصناف العميل',
+    targets:'🎯 التارقت', files:'📁 الملفات', settings:'⚙️ الإعدادات',
+    admin_role:'مدير', user_role:'مستخدم',
+    search_placeholder:'ابحث هنا...', search_hint:'اكتب الاسم أو الرقم ← Enter للتحديد',
+    no_results:'لا يوجد نتائج', selected:'تم تحديد: ',
+    sar:' ر', pcs_box:' حبة/كرتون',
+    pin_enter:'أدخل رمز الدخول', pin_wrong:'❌ رمز خاطئ، حاول مرة أخرى',
+    welcome_admin:'✅ مرحباً يا مدير', welcome_user:'✅ مرحباً بك',
+    saved:'✅ تم الحفظ', updated:'✅ تم التحديث', deleted:'🗑️ تم الحذف',
+    confirm_delete:'هل أنت متأكد من الحذف؟', confirm_clear:'هل أنت متأكد من مسح جميع البيانات؟',
+    order_saved:'✅ تم حفظ الأوردر', return_saved:'✅ تم تسجيل المرتجع',
+    product_added:'✅ تم إضافة الصنف', customer_added:'✅ تم إضافة العميل',
+    target_set:'🎯 تم تعيين التارقت', link_saved:'✅ تم الربط',
+    files_uploaded:'✅ تم رفع الملفات', file_deleted:'🗑️ تم حذف الملف',
+    import_success:'✅ تم استيراد', products_imported:' صنف',
+    data_exported:'📦 تم تصدير جميع البيانات', data_cleared:'🗑️ تم مسح جميع البيانات',
+    data_imported:'✅ تم استيراد البيانات', file_error:'❌ خطأ في قراءة الملف',
+    profile_saved:'✅ تم حفظ الملف الشخصي', avatar_updated:'✅ تم تحديث الصورة',
+    pins_saved:'🔐 تم حفظ الرموز', pin_warn_admin:'⚠️ رمز المدير يجب أن يكون 4 أرقام',
+    pin_warn_user:'⚠️ رمز المستخدم يجب أن يكون 4 أرقام',
+    fill_customer:'⚠️ اختر العميل', fill_price:'⚠️ أدخل السعر',
+    fill_all:'⚠️ أكمل البيانات', fill_name:'⚠️ أدخل اسم الصنف',
+    fill_cid_name:'⚠️ أدخل رقم واسم العميل', fill_ci:'⚠️ اختر العميل والصنف',
+    fill_month_target:'⚠️ أدخل الشهر والقيمة',
+    new_order_notif:'🛒 أوردر جديد للعميل ',
+    copy_success:'📋 تم نسخ بيانات الصنف',
+    hidden_products:'الأصناف مخفية — فعّل مفتاح الإظهار',
+    no_products:'لا توجد أصناف', no_orders:'لا توجد أوردرات',
+    no_returns:'لا توجد مرتجعات', no_customers:'لا يوجد عملاء',
+    no_links:'لا توجد روابط', no_history:'لا يوجد سجل بعد',
+    no_ctargets:'لا يوجد تارقت للعملاء',
+    achieved:'محقق', of_target:'من التارقت', monthly_target:'التارقت الشهري',
+  },
+  en: {
+    dashboard:'⚡ Dashboard', products:'📦 Products', orders:'🛒 Orders',
+    returns:'↩️ Returns', customers:'👥 Customers', cust_items:'🔗 Customer Items',
+    targets:'🎯 Targets', files:'📁 Files', settings:'⚙️ Settings',
+    admin_role:'Admin', user_role:'User',
+    search_placeholder:'Search here...', search_hint:'Type name, number or barcode → Enter to select',
+    no_results:'No results found', selected:'Selected: ',
+    sar:' SAR', pcs_box:' pcs/box',
+    pin_enter:'Enter your PIN', pin_wrong:'❌ Wrong PIN, try again',
+    welcome_admin:'✅ Welcome, Admin', welcome_user:'✅ Welcome',
+    saved:'✅ Saved', updated:'✅ Updated', deleted:'🗑️ Deleted',
+    confirm_delete:'Are you sure you want to delete?', confirm_clear:'Are you sure you want to clear all data?',
+    order_saved:'✅ Order saved', return_saved:'✅ Return registered',
+    product_added:'✅ Product added', customer_added:'✅ Customer added',
+    target_set:'🎯 Target set', link_saved:'✅ Linked',
+    files_uploaded:'✅ Files uploaded', file_deleted:'🗑️ File deleted',
+    import_success:'✅ Imported', products_imported:' products',
+    data_exported:'📦 All data exported', data_cleared:'🗑️ All data cleared',
+    data_imported:'✅ Data imported', file_error:'❌ Error reading file',
+    profile_saved:'✅ Profile saved', avatar_updated:'✅ Photo updated',
+    pins_saved:'🔐 PINs saved', pin_warn_admin:'⚠️ Admin PIN must be 4 digits',
+    pin_warn_user:'⚠️ User PIN must be 4 digits',
+    fill_customer:'⚠️ Select a customer', fill_price:'⚠️ Enter the price',
+    fill_all:'⚠️ Complete all fields', fill_name:'⚠️ Enter product name',
+    fill_cid_name:'⚠️ Enter customer ID and name', fill_ci:'⚠️ Select customer and product',
+    fill_month_target:'⚠️ Enter month and value',
+    new_order_notif:'🛒 New order for customer ',
+    copy_success:'📋 Product info copied',
+    hidden_products:'Products hidden — enable the toggle to show',
+    no_products:'No products', no_orders:'No orders',
+    no_returns:'No returns', no_customers:'No customers',
+    no_links:'No links', no_history:'No history yet',
+    no_ctargets:'No customer targets',
+    achieved:'Achieved', of_target:'of Target', monthly_target:'Monthly Target',
+  }
+};
+
+function t(key){return T[curLang][key]||T['ar'][key]||key}
+
+function setLang(lang, save=false){
+  curLang = lang;
+  if(save) localStorage.setItem('crm_lang', lang);
+  const isEn = lang === 'en';
+  document.body.classList.toggle('lang-en', isEn);
+  document.documentElement.lang = isEn ? 'en' : 'ar';
+  document.documentElement.dir = isEn ? 'ltr' : 'rtl';
+
+  // Update all data-ar/data-en elements
+  document.querySelectorAll('[data-ar]').forEach(el=>{
+    const txt = el.getAttribute('data-'+lang) || el.getAttribute('data-ar');
+    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'){el.placeholder=txt;}
+    else{el.textContent=txt;}
+  });
+
+  // Lang pills
+  ['lpAr','lpAr2'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('on',!isEn)});
+  ['lpEn','lpEn2'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('on',isEn)});
+  ['langbAr'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('on',!isEn)});
+
+  // Login buttons
+  document.querySelectorAll('.langb').forEach(b=>{
+    const bLang = b.textContent.includes('English')||b.textContent.includes('🇺🇸') ? 'en':'ar';
+    b.classList.toggle('on', bLang===lang);
+  });
+
+  // Search placeholders
+  const gsi=document.getElementById('GSI');
+  if(gsi) gsi.placeholder = isEn?'Search: name / number / barcode → Enter':'بحث: اسم/رقم/باركود → Enter';
+  const dsi=document.getElementById('DSI');
+  if(dsi) dsi.placeholder = isEn?'Search here...':'ابحث هنا...';
+
+  // PSearch
+  const ps=document.getElementById('PSearch');
+  if(ps) ps.placeholder = isEn?'Search: name / number / barcode / SKU...':'بحث: اسم/رقم/باركود/SKU...';
+
+  // Login sub
+  const lssub=document.getElementById('ls-sub');
+  if(lssub) lssub.textContent = isEn?'CRM Pro — Smart Sales System':'CRM Pro — نظام المبيعات الذكي';
+
+  // Hint
+  const lhint=document.getElementById('lhint');
+  if(lhint) lhint.textContent = t('pin_enter');
+
+  // Role sidebar
+  const srl = document.getElementById('sideRl');
+  if(srl) srl.textContent = curRole==='admin'?t('admin_role'):t('user_role');
+
+  // No-history fallback in target table
+  const htt=document.getElementById('TgtHistTbl');
+  if(htt&&htt.innerHTML.includes('لا يوجد')||htt&&htt.innerHTML.includes('No history')){
+    htt.innerHTML=`<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--t3)">${t('no_history')}</td></tr>`;
+  }
+
+  // Topbar title
+  const curPage=document.querySelector('.pg.on')?.id?.replace('pg-','');
+  if(curPage) document.getElementById('TBT').innerHTML=t(curPage)||curPage;
+
+  // SAR label in product card
+  const sprl=document.querySelector('.spc-prl');
+  if(sprl) sprl.textContent = isEn?'SAR/unit':'ريال/وحدة';
+}
+
+/* ═══════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════ */
+let pinBuf='',pinRole='admin',curRole='admin';
+function getPin(role){const pins=DB.g('pins')||{admin:'1234',user:'0000'};return pins[role]||'1234'}
+
+function selRole(r){
+  pinRole=r;pinBuf='';updateDots();
+  document.getElementById('rt-admin').classList.toggle('on',r==='admin');
+  document.getElementById('rt-user').classList.toggle('on',r==='user');
+  const hints={ar:{admin:'رمز المدير الافتراضي: 1234',user:'رمز المستخدم الافتراضي: 0000'},en:{admin:'Default Admin PIN: 1234',user:'Default User PIN: 0000'}};
+  document.getElementById('rhint').textContent=hints[curLang]?.[r]||hints.ar[r];
+  document.getElementById('lhint').textContent=t('pin_enter');
+}
+
+function pp(d){if(pinBuf.length>=4)return;pinBuf+=d;updateDots();if(pinBuf.length===4)setTimeout(checkPin,120)}
+function pdel(){pinBuf=pinBuf.slice(0,-1);updateDots()}
+function updateDots(){document.querySelectorAll('.pdot').forEach((d,i)=>{d.classList.remove('f','e');if(i<pinBuf.length)d.classList.add('f')})}
+function checkPin(){
+  const correct=getPin(pinRole);
+  if(pinBuf===correct){
+    curRole=pinRole;
+    document.getElementById('LS').style.display='none';
+    document.getElementById('APP').style.display='flex';
+    document.body.classList.toggle('role-admin',curRole==='admin');
+    document.getElementById('sideRl').textContent=curRole==='admin'?t('admin_role'):t('user_role');
+    loadProfile();initApp();
+    toast(curRole==='admin'?t('welcome_admin'):t('welcome_user'),'gr');
+  } else {
+    document.querySelectorAll('.pdot').forEach(d=>d.classList.add('e'));
+    document.getElementById('lhint').textContent=t('pin_wrong');
+    setTimeout(()=>{pinBuf='';updateDots();document.getElementById('lhint').textContent=t('pin_enter')},700);
+  }
+}
+function logout(){pinBuf='';pinRole='admin';selRole('admin');document.getElementById('LS').style.display='flex';document.getElementById('APP').style.display='none'}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+function go(id,el){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nv').forEach(n=>n.classList.remove('on'));
+  const pg=document.getElementById('pg-'+id);if(pg)pg.classList.add('on');
+  if(el)el.classList.add('on');
+  document.getElementById('TBT').innerHTML=t(id)||id;
+  closeNp();closeAllDrops();
+  if(id==='dashboard')refreshDash();
+  if(id==='products')renderProds();
+  if(id==='orders')renderOrds();
+  if(id==='returns')renderRets();
+  if(id==='customers')renderCusts();
+  if(id==='cust_items')renderCI();
+  if(id==='targets')renderTgts();
+  if(id==='files')renderFiles();
+  document.getElementById('ordBadge').textContent=DB.l('ords').length;
+}
+
+/* ═══════════════════════════════════════
+   SMART SEARCH (ENHANCED)
+═══════════════════════════════════════ */
+let selProd=null;
+
+function searchProds(v){
+  const q=v.toLowerCase().trim();if(!q)return[];
+  return DB.l('prods').filter(p=>(p.name||'').toLowerCase().includes(q)||(p.num||'').toString().includes(q)||(p.bc||'').toString().includes(q)||(p.sku||'').toLowerCase().includes(q)).slice(0,8);
+}
+
+function buildDrop(res,dropId){
+  const d=document.getElementById(dropId);
+  if(!res.length){d.classList.remove('op');return}
+  d.innerHTML=res.map((p,i)=>`
+    <div class="gsr${i===0?' hl':''}" data-id="${p.id}" onmousedown="pickProd('${p.id}','${dropId}')">
+      <div class="gsr-ic">📦</div>
+      <div class="gsr-m">
+        <div class="gsr-n">${p.name}</div>
+        <div class="gsr-s">${p.num} · ${p.bc} · ${p.box}${t('pcs_box')} · SKU: ${p.sku}</div>
+      </div>
+      <div class="gsr-p">${(+p.price||0).toLocaleString()}${t('sar')}</div>
+    </div>`).join('');
+  d.classList.add('op');
+}
+
+function gsLive(v){const res=searchProds(v);if(!v||v.length<2){document.getElementById('GSD').classList.remove('op');return}buildDrop(res,'GSD')}
+function gsKey(e){
+  if(e.key==='Enter'){const v=e.target.value.trim();const res=searchProds(v);if(res.length)pickProd(res[0].id,'GSD');document.getElementById('GSD').classList.remove('op');}
+  if(e.key==='Escape')document.getElementById('GSD').classList.remove('op');
+}
+function dsLive(v){const res=searchProds(v);if(!v||v.length<2){document.getElementById('DSD').classList.remove('op');return}buildDrop(res,'DSD')}
+function dsKey(e){
+  if(e.key==='Enter'){
+    const v=e.target.value.trim();const res=searchProds(v);
+    if(res.length){pickProd(res[0].id,'DSD');}
+    else toast(t('no_results'),'am');
+    document.getElementById('DSD').classList.remove('op');
+  }
+  if(e.key==='Escape')document.getElementById('DSD').classList.remove('op');
+}
+
+function pickProd(id,dropId){
+  const p=DB.l('prods').find(x=>x.id===id);if(!p)return;
+  selProd=p;
+  // Update big card
+  document.getElementById('SPNM').textContent=p.name;
+  document.getElementById('SPPR').textContent=(+p.price||0).toLocaleString();
+  document.getElementById('SPBOX').textContent=p.box+(t('pcs_box'));
+  document.getElementById('SPTG').innerHTML=`
+    <span class="stag st-b"># ${p.num||'—'}</span>
+    <span class="stag st-g">📊 ${p.bc||'—'}</span>
+    <span class="stag st-a">📦 ${p.box||'—'}${t('pcs_box')}</span>
+    <span class="stag st-p">SKU: ${p.sku||'—'}</span>`;
+  // Update both emojis in card
+  document.querySelectorAll('.spcard .spc-em').forEach(el=>el.textContent='📦');
+  document.getElementById('SPCARD').classList.add('on');
+  // Select text in search box
+  const dsi=document.getElementById('DSI');
+  if(dsi){dsi.value=p.name;dsi.select();}
+  document.getElementById(dropId).classList.remove('op');
+  toast(t('selected')+p.name,'gr');
+}
+
+function clearSel(){
+  selProd=null;
+  document.getElementById('SPCARD').classList.remove('on');
+  const dsi=document.getElementById('DSI');if(dsi){dsi.value='';dsi.focus();}
+}
+function editSelProd(){if(selProd)openEditProd(selProd.id)}
+function copySPInfo(){
+  if(!selProd)return;
+  const txt=`${selProd.name} | #${selProd.num} | BC:${selProd.bc} | SKU:${selProd.sku} | ${(+selProd.price||0).toLocaleString()} ${curLang==='en'?'SAR':'ر'}`;
+  navigator.clipboard?.writeText(txt).then(()=>toast(t('copy_success'),'bl')).catch(()=>toast(t('copy_success'),'bl'));
+}
+function closeAllDrops(){document.querySelectorAll('.gsd').forEach(d=>d.classList.remove('op'))}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.gsw')&&!e.target.closest('.sc-iw'))closeAllDrops();
+  if(!e.target.closest('[onclick="toggleNp()"]')&&!e.target.closest('.np'))closeNp();
+});
+
+/* ═══════════════════════════════════════
+   PRODUCTS CRUD
+═══════════════════════════════════════ */
+function renderProds(){
+  const show=document.getElementById('ShowProdsTg')?.checked;
+  const q=(document.getElementById('PSearch')?.value||'').toLowerCase();
+  const data=DB.l('prods').filter(p=>!q||(p.name||'').toLowerCase().includes(q)||(p.num||'').toString().includes(q)||(p.bc||'').toString().includes(q)||(p.sku||'').toLowerCase().includes(q));
+  const el=document.getElementById('ProdCnt');if(el)el.textContent=data.length+(curLang==='en'?' products':' صنف');
+  const tb=document.getElementById('ProdTbl');if(!tb)return;
+  if(!show){tb.innerHTML=`<tr><td colspan="7"><div class="emp"><div class="emp-ic">🔒</div><div class="emp-t">${t('hidden_products')}</div></div></td></tr>`;return}
+  tb.innerHTML=data.length?data.map(p=>`
+    <tr id="PR-${p.id}">
+      <td class="tb2">${p.num||'—'}</td>
+      <td><div class="tb2">${p.name}</div></td>
+      <td>${p.bc||'—'}</td>
+      <td style="text-align:center">${p.box||'—'}</td>
+      <td style="font-weight:700;color:var(--b)">${(+p.price||0).toLocaleString()} ${curLang==='en'?'SAR':'ر'}</td>
+      <td>${p.sku||'—'}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn bo2b bx adm-btn" onclick="openEditProd('${p.id}')">✏️</button>
+        <button class="btn br bx adm-btn" onclick="delRow('prods','${p.id}','PR-${p.id}')">🗑️</button>
+      </div></td>
+    </tr>`).join(''):`<tr><td colspan="7"><div class="emp"><div class="emp-ic">📦</div><div class="emp-t">${t('no_products')}</div></div></td></tr>`;
+}
+
+function saveProd(){
+  const eid=document.getElementById('mp-id').value;
+  const p={num:v('mp-num'),name:v('mp-name'),bc:v('mp-bc'),box:v('mp-box'),price:v('mp-pr'),sku:v('mp-sku')};
+  if(!p.name){toast(t('fill_name'),'am');return}
+  if(eid){DB.upd('prods',eid,p);toast(t('updated'),'gr');}
+  else{p.id='p_'+Date.now();DB.add('prods',p);toast(t('product_added'),'gr');}
+  closeM('m-prod');renderProds();popSels();refreshDash();
+}
+function openEditProd(id){
+  const p=DB.l('prods').find(x=>x.id===id);if(!p)return;
+  si('mp-id',id);si('mp-num',p.num||'');si('mp-name',p.name||'');si('mp-bc',p.bc||'');si('mp-box',p.box||'');si('mp-pr',p.price||'');si('mp-sku',p.sku||'');
+  document.getElementById('MPT').textContent=curLang==='en'?'Edit Product':'تعديل صنف';
+  openM('m-prod');
+}
+function impProds(input){
+  const f=input.files[0];if(!f)return;
+  const ext=f.name.split('.').pop().toLowerCase();
+  if(ext==='xlsx'||ext==='xls'){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1});
+      let n=0;
+      rows.slice(1).forEach(row=>{
+        if(!row[1])return;
+        const p={id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2),num:row[0]||'',name:row[1]||'',bc:row[2]||'',box:row[3]||'',price:row[4]||'0',sku:row[5]||''};
+        if(p.name){DB.add('prods',p);n++}
+      });
+      toast(t('import_success')+n+t('products_imported'),'gr');renderProds();popSels();refreshDash();input.value='';
+    };reader.readAsArrayBuffer(f);
+  } else {
+    Papa.parse(f,{header:true,skipEmptyLines:true,complete:res=>{
+      let n=0;
+      res.data.forEach(row=>{
+        const p={id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2),num:row['رقم الصنف']||row['num']||'',name:row['اسم الصنف']||row['name']||'',bc:row['الباركود']||row['barcode']||'',box:row['حبات الكرتون']||row['box']||'',price:row['السعر']||row['price']||'0',sku:row['SKU']||row['sku']||''};
+        if(p.name){DB.add('prods',p);n++}
+      });
+      toast(t('import_success')+n+t('products_imported'),'gr');renderProds();popSels();refreshDash();input.value='';
+    },error:()=>toast(t('file_error'),'rd')});
+  }
+}
+function expProds(){
+  const d=DB.l('prods');
+  const csv=['\uFEFFرقم الصنف,اسم الصنف,الباركود,حبات الكرتون,السعر,SKU',...d.map(p=>`${p.num||''},${p.name||''},${p.bc||''},${p.box||''},${p.price||''},${p.sku||''}`)].join('\n');
+  dlCSV(csv,'products.csv');
+}
+
+/* ═══════════════════════════════════════
+   CUSTOMERS CRUD
+═══════════════════════════════════════ */
+function renderCusts(){
+  const q=(document.getElementById('CSearch')?.value||'').toLowerCase();
+  const data=DB.l('custs').filter(c=>!q||(c.name||'').toLowerCase().includes(q)||(c.cid||'').toLowerCase().includes(q)||(c.loc||'').toLowerCase().includes(q));
+  const el=document.getElementById('CustCnt');if(el)el.textContent=data.length+(curLang==='en'?' customers':' عميل');
+  const tb=document.getElementById('CustTbl');if(!tb)return;
+  tb.innerHTML=data.length?data.map(c=>{
+    const tot=DB.l('ords').filter(o=>o.cid===c.cid).reduce((s,o)=>s+(+o.price||0),0);
+    return`<tr id="CR-${c.id}">
+      <td class="tb2">${c.cid}</td><td><div class="tb2">${c.name}</div></td>
+      <td>${c.loc||'—'}</td>
+      <td style="color:var(--t2);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.notes||'—'}</td>
+      <td style="font-weight:700;color:var(--b)">${tot.toLocaleString()} ${curLang==='en'?'SAR':'ر'}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn bo2b bx adm-btn" onclick="openEditCust('${c.id}')">✏️</button>
+        <button class="btn br bx adm-btn" onclick="delRow('custs','${c.id}','CR-${c.id}')">🗑️</button>
+      </div></td>
+    </tr>`}).join(''):`<tr><td colspan="6"><div class="emp"><div class="emp-ic">👥</div><div class="emp-t">${t('no_customers')}</div></div></td></tr>`;
+}
+function saveCust(){
+  const eid=document.getElementById('mc-id').value;
+  const c={cid:v('mc-cid'),name:v('mc-nm'),loc:v('mc-loc'),notes:v('mc-nt')};
+  if(!c.cid||!c.name){toast(t('fill_cid_name'),'am');return}
+  if(eid){DB.upd('custs',eid,c);toast(t('updated'),'gr');}
+  else{c.id='c_'+Date.now();DB.add('custs',c);toast(t('customer_added'),'gr');}
+  closeM('m-cust');renderCusts();popSels();refreshDash();
+}
+function openEditCust(id){
+  const c=DB.l('custs').find(x=>x.id===id);if(!c)return;
+  si('mc-id',id);si('mc-cid',c.cid||'');si('mc-nm',c.name||'');si('mc-loc',c.loc||'');si('mc-nt',c.notes||'');
+  document.getElementById('MCT').textContent=curLang==='en'?'Edit Customer':'تعديل عميل';
+  openM('m-cust');
+}
+
+/* ═══════════════════════════════════════
+   ORDERS CRUD
+═══════════════════════════════════════ */
+function renderOrds(){
+  const q=(document.getElementById('OSearch')?.value||'').toLowerCase();
+  const data=[...DB.l('ords')].reverse().filter(o=>!q||(o.cid||'').toLowerCase().includes(q)||(o.po||'').toLowerCase().includes(q)||(o.dt||'').includes(q));
+  const tot=DB.l('ords').reduce((s,o)=>s+(+o.price||0),0);
+  const el=document.getElementById('OrdCnt');if(el)el.textContent=data.length+(curLang==='en'?' orders':' أوردر');
+  const totEl=document.getElementById('OrdTotal');if(totEl)totEl.textContent=tot.toLocaleString()+(curLang==='en'?' SAR':' ر');
+  const tgt=DB.g('tgt_cur');const tv=tgt?.value||1;
+  const pct=Math.min(100,Math.round(tot/tv*100));
+  const bar=document.getElementById('OrdBar');const pctEl=document.getElementById('OrdPct');
+  if(bar)bar.style.width=pct+'%';if(pctEl)pctEl.textContent=pct+'%';
+  const tb=document.getElementById('OrdTbl');if(!tb)return;
+  const cm=custMap();
+  tb.innerHTML=data.length?data.map((o,i)=>`
+    <tr id="OR-${o.id}">
+      <td style="color:var(--t3);font-size:11px">${data.length-i}</td>
+      <td><div class="tb2">${o.cid}</div><div class="ts">${cm[o.cid]||'—'}</div></td>
+      <td>${o.po||'—'}</td><td>${o.dt||'—'}</td>
+      <td style="font-weight:700;color:var(--b)">${(+o.price||0).toLocaleString()}</td>
+      <td style="color:var(--gr)">${(+o.dprice||0).toLocaleString()}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn bo2b bx adm-btn" onclick="openEditOrd('${o.id}')">✏️</button>
+        <button class="btn br bx adm-btn" onclick="delRow('ords','${o.id}','OR-${o.id}')">🗑️</button>
+      </div></td>
+    </tr>`).join(''):`<tr><td colspan="7"><div class="emp"><div class="emp-ic">🛒</div><div class="emp-t">${t('no_orders')}</div></div></td></tr>`;
+}
+function saveOrd(){
+  const eid=document.getElementById('mo-id').value;
+  const o={cid:v('mo-cust'),po:v('mo-po'),dt:v('mo-dt'),price:v('mo-pr'),dprice:v('mo-dpr')};
+  if(!o.cid){toast(t('fill_customer'),'am');return}
+  if(!o.price){toast(t('fill_price'),'am');return}
+  if(eid){DB.upd('ords',eid,o);toast(t('updated'),'gr');}
+  else{o.id='o_'+Date.now();DB.add('ords',o);toast(t('order_saved'),'gr');}
+  closeM('m-ord');renderOrds();refreshDash();
+  pushNotif(t('new_order_notif')+(custMap()[o.cid]||o.cid));
+}
+function openEditOrd(id){
+  const o=DB.l('ords').find(x=>x.id===id);if(!o)return;
+  si('mo-id',id);si('mo-cust',o.cid||'');si('mo-po',o.po||'');si('mo-dt',o.dt||'');si('mo-pr',o.price||'');si('mo-dpr',o.dprice||'');
+  document.getElementById('MOT').textContent=curLang==='en'?'Edit Order':'تعديل أوردر';
+  openM('m-ord');
+}
+function autoDP(){const p=document.getElementById('mo-pr')?.value;const dp=document.getElementById('mo-dpr');if(dp&&!dp.value&&p)dp.value=p}
+function expOrds(){
+  const cm=custMap();
+  const csv=['\uFEFFرقم العميل,الاسم,رقم PO,التاريخ,السعر,بعد التوصيل',...DB.l('ords').map(o=>`${o.cid||''},${cm[o.cid]||''},${o.po||''},${o.dt||''},${o.price||''},${o.dprice||''}`)].join('\n');
+  dlCSV(csv,'orders.csv');
+}
+
+/* ═══════════════════════════════════════
+   RETURNS CRUD
+═══════════════════════════════════════ */
+function renderRets(){
+  const q=(document.getElementById('RSearch')?.value||'').toLowerCase();
+  const data=[...DB.l('rets')].reverse().filter(r=>!q||(r.cid||'').toLowerCase().includes(q)||(r.ref||'').toLowerCase().includes(q));
+  const el=document.getElementById('RetCnt');if(el)el.textContent=data.length+(curLang==='en'?' returns':' مرتجع');
+  const tb=document.getElementById('RetTbl');if(!tb)return;
+  const cm=custMap();
+  tb.innerHTML=data.length?data.map((r,i)=>`
+    <tr id="RR-${r.id}">
+      <td style="color:var(--t3)">${i+1}</td>
+      <td><div class="tb2">${r.cid}</div><div class="ts">${cm[r.cid]||'—'}</div></td>
+      <td>${r.ref||'—'}</td><td>${r.dt||'—'}</td>
+      <td style="font-weight:700;color:var(--rd)">${(+r.amt||0).toLocaleString()} ${curLang==='en'?'SAR':'ر'}</td>
+      <td style="color:var(--t2)">${r.rsn||'—'}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn bo2b bx adm-btn" onclick="openEditRet('${r.id}')">✏️</button>
+        <button class="btn br bx adm-btn" onclick="delRow('rets','${r.id}','RR-${r.id}')">🗑️</button>
+      </div></td>
+    </tr>`).join(''):`<tr><td colspan="7"><div class="emp"><div class="emp-ic">↩️</div><div class="emp-t">${t('no_returns')}</div></div></td></tr>`;
+}
+function saveRet(){
+  const eid=document.getElementById('mr-id').value;
+  const r={cid:v('mr-cust'),ref:v('mr-ref'),dt:v('mr-dt'),amt:v('mr-amt'),rsn:v('mr-rsn')};
+  if(!r.cid){toast(t('fill_customer'),'am');return}
+  if(eid){DB.upd('rets',eid,r);toast(t('updated'),'gr');}
+  else{r.id='r_'+Date.now();DB.add('rets',r);toast(t('return_saved'),'rd');}
+  closeM('m-ret');renderRets();refreshDash();
+}
+function openEditRet(id){
+  const r=DB.l('rets').find(x=>x.id===id);if(!r)return;
+  si('mr-id',id);si('mr-cust',r.cid||'');si('mr-ref',r.ref||'');si('mr-dt',r.dt||'');si('mr-amt',r.amt||'');si('mr-rsn',r.rsn||'');
+  document.getElementById('MRT').textContent=curLang==='en'?'Edit Return':'تعديل مرتجع';
+  openM('m-ret');
+}
+function expRets(){
+  const cm=custMap();
+  const csv=['\uFEFFرقم العميل,الاسم,المرجع,التاريخ,المبلغ,السبب',...DB.l('rets').map(r=>`${r.cid||''},${cm[r.cid]||''},${r.ref||''},${r.dt||''},${r.amt||''},${r.rsn||''}`)].join('\n');
+  dlCSV(csv,'returns.csv');
+}
+
+/* ═══════════════════════════════════════
+   TARGETS
+═══════════════════════════════════════ */
+function saveTgt(){
+  const m=v('mt-mo'),val=+v('mt-vl');
+  if(!m||!val){toast(t('fill_month_target'),'am');return}
+  const cur=DB.g('tgt_cur');
+  if(cur?.month){
+    const ach=DB.l('ords').reduce((s,o)=>s+(+o.price||0),0);
+    const pct=Math.round(ach/(cur.value||1)*100);
+    const hist=DB.l('tgt_hist');
+    if(!hist.find(h=>h.month===cur.month))DB.add('tgt_hist',{id:'th_'+Date.now(),month:cur.month,value:cur.value,ach,pct});
+  }
+  DB.s('tgt_cur',{month:m,value:val});
+  toast(t('target_set'),'gr');closeM('m-tgt');renderTgts();refreshDash();
+}
+function saveCtgt(){
+  const cid=v('mct-c'),m=v('mct-mo'),val=+v('mct-vl');
+  if(!cid||!m||!val){toast(t('fill_all'),'am');return}
+  const ex=DB.l('ctgts').find(x=>x.cid===cid&&x.month===m);
+  if(ex)DB.upd('ctgts',ex.id,{value:val});else DB.add('ctgts',{id:'ct_'+Date.now(),cid,month:m,value:val});
+  toast(t('saved'),'gr');closeM('m-ctgt');renderTgts();
+}
+function renderTgts(){
+  const cur=DB.g('tgt_cur');const ords=DB.l('ords');
+  const ach=ords.reduce((s,o)=>s+(+o.price||0),0);
+  const tv=cur?.value||0;const pct=tv?Math.min(100,Math.round(ach/tv*100)):0;
+  const cm=custMap();
+  const el=(id,tx)=>{const e=document.getElementById(id);if(e)e.textContent=tx};
+  el('TgtV',tv?(+tv).toLocaleString()+(curLang==='en'?' SAR':' ر'):'—');
+  el('TgtM',cur?.month||'—');el('TgtPct',pct+'%');el('TgtAch',ach.toLocaleString()+(curLang==='en'?' SAR':' ر'));
+  const tb=document.getElementById('TgtBar');if(tb)tb.style.width=pct+'%';
+  const hist=[...DB.l('tgt_hist')].reverse();
+  const htb=document.getElementById('TgtHistTbl');
+  if(htb)htb.innerHTML=hist.length?hist.map(h=>`
+    <tr><td>${h.month}</td><td>${(+h.value||0).toLocaleString()}</td>
+    <td>${(+h.ach||0).toLocaleString()}</td>
+    <td><span class="bdg ${h.pct>=100?'bg':h.pct>=70?'ba2':'brd'}">${h.pct}%</span></td></tr>
+  `).join(''):`<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--t3)">${t('no_history')}</td></tr>`;
+  const ctb=document.getElementById('CTgtTbl');
+  if(ctb){
+    const ctd=DB.l('ctgts');
+    ctb.innerHTML=ctd.length?ctd.map(ct=>{
+      const cach=ords.filter(o=>o.cid===ct.cid).reduce((s,o)=>s+(+o.price||0),0);
+      const cp=ct.value?Math.min(100,Math.round(cach/ct.value*100)):0;
+      return`<tr><td>${cm[ct.cid]||ct.cid}</td><td>${ct.month}</td>
+        <td>${(+ct.value).toLocaleString()}</td><td>${cach.toLocaleString()}</td>
+        <td><span class="bdg ${cp>=100?'bg':cp>=70?'ba2':'brd'}">${cp}%</span></td></tr>`;
+    }).join(''):`<tr><td colspan="5" style="text-align:center;padding:14px;color:var(--t3)">${t('no_ctargets')}</td></tr>`;
+  }
+  buildTgtChart();
+}
+
+/* ═══════════════════════════════════════
+   CUSTOMER ITEMS
+═══════════════════════════════════════ */
+function renderCI(){
+  const cFilter=document.getElementById('CIFilt')?.value||'';
+  const q=(document.getElementById('CISearch')?.value||'').toLowerCase();
+  const pm=prodMap();const cm=custMap();
+  const data=DB.l('citems').filter(ci=>(!cFilter||ci.cid===cFilter)&&(!q||(pm[ci.pid]?.name||'').toLowerCase().includes(q)||(ci.sku||'').toLowerCase().includes(q)));
+  const tb=document.getElementById('CITbl');if(!tb)return;
+  tb.innerHTML=data.length?data.map(ci=>`
+    <tr id="CI-${ci.id}">
+      <td><div class="tb2">${ci.cid}</div><div class="ts">${cm[ci.cid]||'—'}</div></td>
+      <td>${pm[ci.pid]?.name||'—'}</td>
+      <td style="color:var(--b)">${ci.sku||pm[ci.pid]?.sku||'—'}</td>
+      <td style="font-weight:700">${(+(ci.price||pm[ci.pid]?.price)||0).toLocaleString()} ${curLang==='en'?'SAR':'ر'}</td>
+      <td style="color:var(--t2)">${ci.notes||'—'}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn bo2b bx adm-btn" onclick="openEditCI('${ci.id}')">✏️</button>
+        <button class="btn br bx adm-btn" onclick="delRow('citems','${ci.id}','CI-${ci.id}')">🗑️</button>
+      </div></td>
+    </tr>`).join(''):`<tr><td colspan="6"><div class="emp"><div class="emp-ic">🔗</div><div class="emp-t">${t('no_links')}</div></div></td></tr>`;
+}
+function saveCI(){
+  const eid=document.getElementById('mci-id').value;
+  const ci={cid:v('mci-c'),pid:v('mci-p'),sku:v('mci-sku'),price:v('mci-pr'),notes:v('mci-nt')};
+  if(!ci.cid||!ci.pid){toast(t('fill_ci'),'am');return}
+  if(eid){DB.upd('citems',eid,ci);toast(t('updated'),'gr');}
+  else{ci.id='ci_'+Date.now();DB.add('citems',ci);toast(t('link_saved'),'gr');}
+  closeM('m-ci');renderCI();
+}
+function openEditCI(id){
+  const ci=DB.l('citems').find(x=>x.id===id);if(!ci)return;
+  si('mci-id',id);si('mci-c',ci.cid||'');si('mci-p',ci.pid||'');si('mci-sku',ci.sku||'');si('mci-pr',ci.price||'');si('mci-nt',ci.notes||'');
+  document.getElementById('MCIT').textContent=curLang==='en'?'Edit Link':'تعديل ربط';
+  openM('m-ci');
+}
+
+/* ═══════════════════════════════════════
+   FILES (ENHANCED WITH EXCEL VIEWER)
+═══════════════════════════════════════ */
+let fileDataStore = {}; // Store raw file data for opening
+
+function renderFiles(){
+  const files=DB.l('files');
+  const grid=document.getElementById('FGrid');if(!grid)return;
+  const icons={'xlsx':'📊','xls':'📊','csv':'📋','pdf':'📄','png':'🖼️','jpg':'🖼️','jpeg':'🖼️'};
+  const openable=['xlsx','xls','csv','pdf','png','jpg','jpeg'];
+  grid.innerHTML=files.length?files.map(f=>`
+    <div class="fcard" id="FC-${f.id}" onclick="openFile('${f.id}')">
+      <button class="fdel" onclick="event.stopPropagation();delFile('${f.id}')">✕</button>
+      <div class="fic">${icons[f.ext]||'📎'}</div>
+      <div class="fn" title="${f.name}">${f.name}</div>
+      <div class="fsz">${f.size}</div>
+      ${openable.includes(f.ext)?`<button class="fcard-open" onclick="event.stopPropagation();openFile('${f.id}')">👁️ ${curLang==='en'?'Open':'فتح'}</button>`:''}
+    </div>`).join(''):`<div style="text-align:center;padding:40px;color:var(--t3)"><div style="font-size:42px;margin-bottom:10px;opacity:.2">📂</div><div style="font-size:13px">${curLang==='en'?'No files yet':'لا توجد ملفات بعد'}</div></div>`;
+}
+
+function handleFUp(input){
+  Array.from(input.files).forEach(f=>{
+    const ext=f.name.split('.').pop().toLowerCase();
+    const sz=f.size<1024?f.size+'B':f.size<1048576?(f.size/1024).toFixed(1)+'KB':(f.size/1048576).toFixed(1)+'MB';
+    const id='f_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const file={id,name:f.name,ext,size:sz,date:new Date().toLocaleDateString('ar-SA')};
+    DB.add('files',file);
+    // Store file data for opening
+    const reader=new FileReader();
+    reader.onload=e=>{fileDataStore[id]={data:e.target.result,name:f.name,ext,rawFile:f}};
+    if(['xlsx','xls'].includes(ext))reader.readAsArrayBuffer(f);
+    else if(['png','jpg','jpeg','pdf'].includes(ext))reader.readAsDataURL(f);
+    else reader.readAsText(f);
+  });
+  renderFiles();toast(t('files_uploaded'),'gr');input.value='';
+}
+
+function handleFDrop(e){
+  e.preventDefault();document.getElementById('FDrop').classList.remove('dg');
+  if(e.dataTransfer.files.length)handleFUp({files:e.dataTransfer.files});
+}
+
+function openFile(id){
+  const file=DB.l('files').find(f=>f.id===id);if(!file)return;
+  const stored=fileDataStore[id];
+  if(!stored){toast(curLang==='en'?'ℹ️ File stored — please re-upload to view':'ℹ️ أعد رفع الملف لفتحه (البيانات تُحفظ بعد الرفع مباشرة)','bl');return}
+  const {data,ext,name}=stored;
+  if(ext==='xlsx'||ext==='xls'){openExcel(data,name)}
+  else if(ext==='csv'){openCSV(data,name)}
+  else if(['png','jpg','jpeg'].includes(ext)){openImage(data,name)}
+  else if(ext==='pdf'){openPDF(data,name)}
+}
+
+function openExcel(arrayBuffer,name){
+  const wb=XLSX.read(arrayBuffer,{type:'array'});
+  document.getElementById('xl-title').textContent='📊 '+name;
+  const tabs=document.getElementById('xl-tabs');
+  tabs.innerHTML=wb.SheetNames.map((s,i)=>`<button class="xl-tab${i===0?' on':''}" onclick="showSheet(this,'${s.replace(/'/g,"\\'")}',xlWb)">${s}</button>`).join('');
+  window.xlWb=wb;
+  showSheetByName(wb.SheetNames[0],wb);
+  openM('m-xl');
+}
+
+function showSheet(btn,sheetName,wb){
+  document.querySelectorAll('.xl-tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  showSheetByName(sheetName,wb||window.xlWb);
+}
+
+function showSheetByName(sheetName,wb){
+  const ws=wb.Sheets[sheetName];
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+  const meta=document.getElementById('xl-meta');
+  if(meta)meta.textContent=`${rows.length} ${curLang==='en'?'rows':'صف'} × ${rows[0]?.length||0} ${curLang==='en'?'cols':'عمود'}`;
+  const tbl=document.getElementById('xl-tbl');
+  if(!rows.length){tbl.innerHTML='<tbody><tr><td style="text-align:center;padding:30px;color:var(--t3)">Empty sheet</td></tr></tbody>';return}
+  const header=rows[0];const body=rows.slice(1);
+  tbl.innerHTML=`<thead><tr>${header.map(h=>`<th>${h??''}</th>`).join('')}</tr></thead><tbody>${body.slice(0,500).map(row=>`<tr>${row.map(c=>`<td>${c??''}</td>`).join('')}</tr>`).join('')}</tbody>`;
+}
+
+function openCSV(text,name){
+  const rows=text.split('\n').map(r=>r.split(','));
+  document.getElementById('xl-title').textContent='📋 '+name;
+  document.getElementById('xl-tabs').innerHTML='';
+  const meta=document.getElementById('xl-meta');
+  if(meta)meta.textContent=`${rows.length} ${curLang==='en'?'rows':'صف'}`;
+  const header=rows[0];const body=rows.slice(1);
+  const tbl=document.getElementById('xl-tbl');
+  tbl.innerHTML=`<thead><tr>${header.map(h=>`<th>${h||''}</th>`).join('')}</tr></thead><tbody>${body.map(row=>`<tr>${row.map(c=>`<td>${c||''}</td>`).join('')}</tr>`).join('')}</tbody>`;
+  openM('m-xl');
+}
+
+function openImage(dataUrl,name){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px)';
+  ov.innerHTML=`<div style="text-align:center"><img src="${dataUrl}" style="max-width:90vw;max-height:85vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.8)"><div style="color:#fff;margin-top:10px;font-size:13px">${name} — ${curLang==='en'?'Click to close':'انقر للإغلاق'}</div></div>`;
+  ov.onclick=()=>ov.remove();
+  document.body.appendChild(ov);
+}
+
+function openPDF(dataUrl,name){
+  const w=window.open();
+  w.document.write(`<html><head><title>${name}</title></head><body style="margin:0"><embed src="${dataUrl}" width="100%" height="100%" type="application/pdf"></body></html>`);
+}
+
+function delFile(id){
+  DB.del('files',id);delete fileDataStore[id];
+  const el=document.getElementById('FC-'+id);
+  if(el){el.style.opacity='0';el.style.transition='opacity .2s';setTimeout(()=>el.remove(),200)}
+  toast(t('file_deleted'),'rd');
+}
+
+/* ═══════════════════════════════════════
+   CHARTS
+═══════════════════════════════════════ */
+let charts2={};
+const isDk=()=>document.body.classList.contains('dk');
+const gc=()=>isDk()?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)';
+const tc=()=>isDk()?'rgba(255,255,255,.4)':'rgba(0,0,0,.4)';
+function dChart(id){if(charts2[id]){charts2[id].destroy();delete charts2[id]}}
+function rebuildCharts(){buildCharts();buildTgtChart()}
+
+function refreshDash(){
+  const ords=DB.l('ords');const rets=DB.l('rets');
+  const custs=DB.l('custs');const prods=DB.l('prods');
+  const totO=ords.reduce((s,o)=>s+(+o.price||0),0);
+  const totR=rets.reduce((s,r)=>s+(+r.amt||0),0);
+  const net=totO-totR;
+  const tgt=DB.g('tgt_cur');const tv=tgt?.value||1;
+  const pct=Math.min(100,Math.round(totO/tv*100));
+  const sar=curLang==='en'?' SAR':' ر';
+  const kpis=[
+    {l:curLang==='en'?'Total Orders':'إجمالي الأوردرات',v:totO.toLocaleString()+sar,sub:ords.length+(curLang==='en'?' orders':' أوردر'),c:'#3b82f6',ic:'🛒',p:pct},
+    {l:curLang==='en'?'Net Sales':'صافي المبيعات',v:net.toLocaleString()+sar,sub:curLang==='en'?'After returns':'بعد المرتجعات',c:'#10b981',ic:'💰',p:Math.min(100,net/Math.max(tv,1)*100)},
+    {l:curLang==='en'?'Total Returns':'إجمالي المرتجعات',v:totR.toLocaleString()+sar,sub:rets.length+(curLang==='en'?' returns':' مرتجع'),c:'#ef4444',ic:'↩️',p:Math.min(100,totR/Math.max(totO,1)*100)},
+    {l:curLang==='en'?'Customers / Products':'العملاء / الأصناف',v:custs.length+' / '+prods.length,sub:curLang==='en'?'customers & products':'عميل وصنف',c:'#f59e0b',ic:'👥',p:custs.length*10},
+  ];
+  const kg=document.getElementById('KPIGrid');
+  if(kg)kg.innerHTML=kpis.map(k=>`
+    <div class="kc" style="--kcc:${k.c}">
+      <div class="kc-gw"></div>
+      <div class="kc-ic">${k.ic}</div>
+      <div class="kc-l">${k.l}</div>
+      <div class="kc-v">${k.v}</div>
+      <div class="kc-ch">${k.sub}</div>
+      <div class="kc-bar"><div class="kc-bf" style="width:${Math.min(100,k.p||0)}%"></div></div>
+    </div>`).join('');
+  const rp=document.getElementById('RingPath');
+  if(rp){const off=289-(289*pct/100);rp.style.strokeDashoffset=off}
+  const rPct=document.getElementById('RPct');if(rPct)rPct.textContent=pct+'%';
+  const rs=document.getElementById('RSales');if(rs)rs.textContent=totO.toLocaleString()+sar;
+  const rt=document.getElementById('RTgt');if(rt)rt.textContent=tv.toLocaleString()+sar;
+  const ob2=document.getElementById('OrdBar');if(ob2)ob2.style.width=pct+'%';
+  const op2=document.getElementById('OrdPct');if(op2)op2.textContent=pct+'%';
+  const ot2=document.getElementById('OrdTotal');if(ot2)ot2.textContent=totO.toLocaleString()+sar;
+  const dtb=document.getElementById('DashOrdTbl');
+  if(dtb){
+    const cm=custMap();const recent=[...ords].reverse().slice(0,5);
+    dtb.innerHTML=recent.length?recent.map(o=>`
+      <tr><td style="color:var(--t3);font-size:11px">${o.id?.slice(-4)}</td>
+      <td><div class="tb2">${cm[o.cid]||o.cid}</div></td>
+      <td style="color:var(--t3)">${o.po||'—'}</td><td style="color:var(--t3)">${o.dt||'—'}</td>
+      <td style="font-weight:700;color:var(--b)">${(+o.price||0).toLocaleString()}</td>
+      <td style="color:var(--gr)">${(+o.dprice||0).toLocaleString()}</td>
+      </tr>`).join(''):`<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--t3)">${t('no_orders')}</td></tr>`;
+  }
+  document.getElementById('ordBadge').textContent=ords.length;
+  buildCharts();
+}
+
+let chartPeriod=6;
+function cprd(n){chartPeriod=n;buildCharts()}
+function buildCharts(){
+  const ords=DB.l('ords');const rets=DB.l('rets');const cm=custMap();
+  dChart('sales');
+  const c1=document.getElementById('cSales');
+  if(c1){
+    const labels=[],salesD=[],tgtD=[];const tgt=DB.g('tgt_cur');
+    for(let i=chartPeriod-1;i>=0;i--){
+      const d=new Date();d.setMonth(d.getMonth()-i);const key=d.toISOString().slice(0,7);
+      labels.push(d.toLocaleDateString(curLang==='en'?'en-US':'ar-SA',{month:'short',year:'2-digit'}));
+      salesD.push(ords.filter(o=>o.dt?.startsWith(key)).reduce((s,o)=>s+(+o.price||0),0));
+      tgtD.push(tgt?.value||0);
+    }
+    charts2['sales']=new Chart(c1,{type:'line',data:{labels,datasets:[
+      {label:curLang==='en'?'Sales':'المبيعات',data:salesD,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',fill:true,tension:.45,pointBackgroundColor:'#3b82f6',pointRadius:4,borderWidth:2.5},
+      {label:curLang==='en'?'Target':'التارقت',data:tgtD,borderColor:'#8b5cf6',backgroundColor:'transparent',borderDash:[5,4],tension:.3,pointRadius:0,borderWidth:1.5}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc(),font:{size:10,family:'"Cairo"'}}}},scales:{x:{grid:{color:gc()},ticks:{color:tc(),font:{size:10}}},y:{grid:{color:gc()},ticks:{color:tc(),callback:v=>v>=1000?(v/1000)+'K':v}}}}});
+  }
+  dChart('cust');
+  const c2=document.getElementById('cCust');
+  if(c2){
+    const ct={};ords.forEach(o=>ct[o.cid]=(ct[o.cid]||0)+(+o.price||0));
+    const lbs=Object.keys(ct).map(k=>cm[k]||k).slice(0,6);const vs=Object.values(ct).slice(0,6);
+    const cols=['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444','#06b6d4'];
+    charts2['cust']=new Chart(c2,{type:'doughnut',data:{labels:lbs,datasets:[{data:vs,backgroundColor:cols,borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:tc(),font:{size:10,family:'"Cairo"'},boxWidth:9,padding:6}}}}});
+  }
+  dChart('ret');
+  const c3=document.getElementById('cRet');
+  if(c3){
+    const labels=[],ov=[],rv=[];
+    for(let i=5;i>=0;i--){const d=new Date();d.setMonth(d.getMonth()-i);const key=d.toISOString().slice(0,7);
+      labels.push(d.toLocaleDateString(curLang==='en'?'en-US':'ar-SA',{month:'short'}));
+      ov.push(ords.filter(o=>o.dt?.startsWith(key)).reduce((s,o)=>s+(+o.price||0),0));
+      rv.push(rets.filter(r=>r.dt?.startsWith(key)).reduce((s,r)=>s+(+r.amt||0),0));
+    }
+    charts2['ret']=new Chart(c3,{type:'bar',data:{labels,datasets:[
+      {label:curLang==='en'?'Orders':'أوردرات',data:ov,backgroundColor:'rgba(59,130,246,.7)',borderRadius:5},
+      {label:curLang==='en'?'Returns':'مرتجعات',data:rv,backgroundColor:'rgba(239,68,68,.6)',borderRadius:5}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc(),font:{size:10,family:'"Cairo"'}}}},scales:{x:{grid:{display:false},ticks:{color:tc(),font:{size:9}}},y:{grid:{color:gc()},ticks:{color:tc()}}}}});
+  }
+  dChart('top');
+  const c4=document.getElementById('cTop');
+  if(c4){
+    const prods=DB.l('prods').slice(0,5);
+    charts2['top']=new Chart(c4,{type:'bar',data:{labels:prods.map(p=>p.name.slice(0,10)),datasets:[{data:prods.map(p=>+p.price||0),backgroundColor:['#3b82f690','#8b5cf690','#10b98190','#f59e0b90','#ef444490'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gc()},ticks:{color:tc()}},y:{grid:{display:false},ticks:{color:tc(),font:{size:10}}}}}});
+  }
+}
+function buildTgtChart(){
+  dChart('tgt');const c=document.getElementById('cTgt');if(!c)return;
+  const hist=DB.l('tgt_hist').slice(-6);
+  charts2['tgt']=new Chart(c,{type:'line',data:{labels:hist.map(h=>h.month),datasets:[
+    {label:curLang==='en'?'Target':'التارقت',data:hist.map(h=>+h.value||0),borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.1)',fill:true,tension:.4,borderWidth:2,pointRadius:4},
+    {label:curLang==='en'?'Achieved':'المحقق',data:hist.map(h=>+h.ach||0),borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.1)',fill:true,tension:.4,borderWidth:2,pointRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc(),font:{size:10,family:'"Cairo"'}}}},scales:{x:{grid:{display:false},ticks:{color:tc()}},y:{grid:{color:gc()},ticks:{color:tc()}}}}});
+}
+
+/* ═══════════════════════════════════════
+   PROFILE / SETTINGS
+═══════════════════════════════════════ */
+function loadProfile(){
+  const p=DB.g('profile')||{};
+  if(p.name){si('SName',p.name);document.getElementById('sideNm').textContent=p.name}
+  if(p.title)si('STitle',p.title);if(p.phone)si('SPhone',p.phone);
+  if(p.comp)si('SComp',p.comp);if(p.region)si('SRegion',p.region);
+  if(p.avatar)setAvatar(p.avatar);
+  const thm=localStorage.getItem('crm_theme')||'dk';
+  setThemeClass(thm==='lt');document.getElementById('DarkTg').checked=thm==='lt';
+  const pins=DB.g('pins')||{admin:'1234',user:'0000'};
+  const ap=document.getElementById('AdminPin');const up=document.getElementById('UserPin');
+  if(ap)ap.value=pins.admin||'';if(up)up.value=pins.user||'';
+}
+function saveProf(){
+  const p={name:v('SName'),title:v('STitle'),phone:v('SPhone'),comp:v('SComp'),region:v('SRegion'),avatar:DB.g('profile')?.avatar||''};
+  DB.s('profile',p);document.getElementById('sideNm').textContent=p.name||'Ali Alsuhaibani';
+  toast(t('profile_saved'),'gr');
+}
+function savePins(){
+  const ap=v('AdminPin');const up=v('UserPin');
+  if(ap&&ap.length!==4){toast(t('pin_warn_admin'),'am');return}
+  if(up&&up.length!==4){toast(t('pin_warn_user'),'am');return}
+  const cur=DB.g('pins')||{admin:'1234',user:'0000'};
+  DB.s('pins',{admin:ap||cur.admin,user:up||cur.user});
+  toast(t('pins_saved'),'gr');
+}
+function handleAvatar(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();r.onload=e=>{const d=e.target.result;setAvatar(d);const p=DB.g('profile')||{};p.avatar=d;DB.s('profile',p);toast(t('avatar_updated'),'gr')};r.readAsDataURL(f);
+}
+function setAvatar(src){
+  const at=document.getElementById('AvTxt');const ai=document.getElementById('AvImg');
+  const sat=document.getElementById('sideAvTxt');const sai=document.getElementById('sideAvImg');
+  if(at)at.style.display='none';if(ai){ai.src=src;ai.style.display='block'}
+  if(sat)sat.style.display='none';if(sai){sai.src=src;sai.style.display='block'}
+}
+function setTheme(dark){localStorage.setItem('crm_theme',dark?'lt':'dk');setThemeClass(dark)}
+function setThemeClass(dark){
+  document.body.classList.toggle('dk',!dark);document.body.classList.toggle('lt',dark);
+  document.getElementById('thBtn').textContent=dark?'🌙':'☀️';setTimeout(rebuildCharts,120);
+}
+function toggleTheme(){const isDark=document.body.classList.contains('dk');setTheme(isDark);document.getElementById('DarkTg').checked=isDark}
+
+/* ═══════════════════════════════════════
+   DATA MANAGEMENT
+═══════════════════════════════════════ */
+function expAll(){
+  const d={prods:DB.l('prods'),custs:DB.l('custs'),ords:DB.l('ords'),rets:DB.l('rets'),citems:DB.l('citems'),tgt_cur:DB.g('tgt_cur'),tgt_hist:DB.l('tgt_hist'),ctgts:DB.l('ctgts'),files:DB.l('files'),profile:DB.g('profile')};
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='crm_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  toast(t('data_exported'),'gr');
+}
+function impAll(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d.prods)DB.s('prods',d.prods);if(d.custs)DB.s('custs',d.custs);
+      if(d.ords)DB.s('ords',d.ords);if(d.rets)DB.s('rets',d.rets);
+      if(d.citems)DB.s('citems',d.citems);if(d.tgt_cur)DB.s('tgt_cur',d.tgt_cur);
+      if(d.tgt_hist)DB.s('tgt_hist',d.tgt_hist);if(d.ctgts)DB.s('ctgts',d.ctgts);
+      toast(t('data_imported'),'gr');refreshDash();popSels();
+    }catch{toast(t('file_error'),'rd')}input.value='';
+  };r.readAsText(f);
+}
+function clrAll(){
+  if(!confirm(t('confirm_clear')))return;
+  ['prods','custs','ords','rets','citems','tgt_cur','tgt_hist','ctgts','files'].forEach(k=>DB.s(k,null));
+  refreshDash();toast(t('data_cleared'),'rd');
+}
+
+/* ═══════════════════════════════════════
+   NOTIFICATIONS
+═══════════════════════════════════════ */
+let notifs=[];
+function pushNotif(msg){
+  const n={id:'n'+Date.now(),msg,time:new Date().toLocaleTimeString(curLang==='en'?'en-US':'ar-SA',{hour:'2-digit',minute:'2-digit'})};
+  notifs.unshift(n);if(notifs.length>10)notifs.pop();
+  renderNotifs();document.getElementById('ndot').style.display='block';
+}
+function renderNotifs(){
+  const nl=document.getElementById('NL');if(!nl)return;
+  nl.innerHTML=notifs.length?notifs.map(n=>`
+    <div class="ni2"><div class="nic" style="background:rgba(59,130,246,.14)">🔔</div>
+    <div><div class="nt">${n.msg}</div><div class="ntm">${n.time}</div></div></div>`).join(''):`<div style="text-align:center;padding:20px;font-size:12px;color:var(--t3)">${curLang==='en'?'No notifications':'لا توجد إشعارات'}</div>`;
+}
+function clearNotifs(){notifs=[];renderNotifs();document.getElementById('ndot').style.display='none'}
+function toggleNp(){document.getElementById('NP').classList.toggle('on')}
+function closeNp(){document.getElementById('NP').classList.remove('on')}
+
+/* ═══════════════════════════════════════
+   POPULATE SELECTS
+═══════════════════════════════════════ */
+function popSels(){
+  const custs=DB.l('custs');const prods=DB.l('prods');
+  const cOpts=`<option value="">${curLang==='en'?'Select customer...':'اختر عميل...'}</option>`+custs.map(c=>`<option value="${c.cid}">${c.cid} — ${c.name}</option>`).join('');
+  ['mo-cust','mr-cust','mct-c','mci-c'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=cOpts});
+  const pOpts=`<option value="">${curLang==='en'?'Select product...':'اختر صنف...'}</option>`+prods.map(p=>`<option value="${p.id}">${p.name} (${p.sku})</option>`).join('');
+  const pe=document.getElementById('mci-p');if(pe)pe.innerHTML=pOpts;
+  const cif=document.getElementById('CIFilt');
+  if(cif){const vv=cif.value;cif.innerHTML=`<option value="">${curLang==='en'?'All Customers':'كل العملاء'}</option>`+custs.map(c=>`<option value="${c.cid}">${c.cid} — ${c.name}</option>`).join('');cif.value=vv}
+}
+
+/* ═══════════════════════════════════════
+   GENERIC DELETE
+═══════════════════════════════════════ */
+function delRow(tbl,id,rowId){
+  if(!confirm(t('confirm_delete')))return;
+  DB.del(tbl,id);
+  const row=document.getElementById(rowId);
+  if(row){row.style.opacity='0';row.style.transition='opacity .25s';setTimeout(()=>row.remove(),260)}
+  toast(t('deleted'),'rd');refreshDash();
+}
+
+/* ═══════════════════════════════════════
+   MODALS
+═══════════════════════════════════════ */
+function openM(id){
+  ['mp-id','mc-id','mo-id','mr-id','mci-id'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});
+  const td=new Date().toISOString().split('T')[0];
+  ['mo-dt','mr-dt'].forEach(i=>{const e=document.getElementById(i);if(e&&!e.value)e.value=td});
+  const tm=new Date().toISOString().slice(0,7);
+  ['mt-mo','mct-mo'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=tm});
+  const titles={
+    'MPT':{ar:'صنف جديد',en:'New Product'},'MCT':{ar:'عميل جديد',en:'New Customer'},
+    'MOT':{ar:'أوردر جديد',en:'New Order'},'MRT':{ar:'مرتجع جديد',en:'New Return'},
+    'MCIT':{ar:'ربط صنف بعميل',en:'Link Item to Customer'}
+  };
+  const tMap={'m-prod':'MPT','m-cust':'MCT','m-ord':'MOT','m-ret':'MRT','m-ci':'MCIT'};
+  if(tMap[id]&&titles[tMap[id]]){const el=document.getElementById(tMap[id]);if(el)el.textContent=titles[tMap[id]][curLang]||titles[tMap[id]].ar}
+  popSels();document.getElementById(id).classList.add('on');
+}
+function closeM(id){document.getElementById(id).classList.remove('on')}
+document.querySelectorAll('.ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+const TC_MAP={gr:'#10b981',rd:'#ef4444',am:'#f59e0b',bl:'#3b82f6'};
+function toast(msg,type='gr'){
+  const wrap=document.getElementById('TW');
+  const t2=document.createElement('div');t2.className='toast';
+  t2.innerHTML=`<span style="color:${TC_MAP[type]||TC_MAP.gr};font-size:15px">●</span>${msg}`;
+  wrap.appendChild(t2);
+  setTimeout(()=>{t2.classList.add('out');setTimeout(()=>t2.remove(),260)},2800);
+}
+
+/* ═══════════════════════════════════════
+   CLOCK
+═══════════════════════════════════════ */
+function tick(){
+  const el=document.getElementById('TCK');if(!el)return;
+  const n=new Date();
+  el.innerHTML=n.toLocaleDateString(curLang==='en'?'en-US':'ar-SA',{weekday:'short',day:'numeric',month:'short'})+'<br>'+n.toLocaleTimeString(curLang==='en'?'en-US':'ar-SA',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(tick,1000);
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+function toggleMini(){document.getElementById('SB').classList.toggle('mini')}
+function toggleMob(){document.getElementById('SB').classList.toggle('mob')}
+function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
+function v(id){const e=document.getElementById(id);return e?e.value.trim():''}
+function si(id,val){const e=document.getElementById(id);if(e)e.value=val}
+function custMap(){const m={};DB.l('custs').forEach(c=>m[c.cid]=c.name);return m}
+function prodMap(){const m={};DB.l('prods').forEach(p=>m[p.id]=p);return m}
+function dlCSV(csv,fn){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=fn;a.click()}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+function initApp(){
+  setLang(curLang);refreshDash();popSels();renderNotifs();tick();
+  const thm=localStorage.getItem('crm_theme')||'dk';
+  setThemeClass(thm==='lt');document.getElementById('DarkTg').checked=thm==='lt';
+}
+
+window.addEventListener('load',()=>{
+  // Apply saved lang
+  setLang(curLang);
+  selRole('admin');tick();
+  document.addEventListener('keydown',e=>{
+    const ls=document.getElementById('LS');
+    if(ls.style.display==='none')return;
+    if(e.key>='0'&&e.key<='9')pp(e.key);
+    if(e.key==='Backspace')pdel();
+  });
+});
+</script>
+</body>
+</html>
